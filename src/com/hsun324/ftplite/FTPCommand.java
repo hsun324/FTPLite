@@ -26,6 +26,8 @@ public abstract class FTPCommand {
 	}
 	public final boolean pushResponse(FTPState state, FTPResponse response) {
 		synchronized (executionSync) {
+			if (state.currentFuture == null) return false;
+			
 			FTPResult result = handleResponse(state, response);
 			if (result != null) {
 				state.currentFuture.setResult(result);

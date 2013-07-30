@@ -4,15 +4,19 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
-public class FTPHandlerSyntax implements FTPHandler {
+public class FTPHandlerSyntax extends FTPHandler {
+	private static final int[] HANDLED_CODES = new int[]{500, 501};
+	
 	@Override
-	public boolean handle(FTPState state, FTPResponse response) {
-		state.currentFuture.setResult(FTPResult.FAILED);
+	public FTPResult handleResponse(FTPState state, FTPResponse response) {
+		return FTPResult.FAILED;
+	}
+	@Override
+	public boolean requiresFuture() {
 		return true;
 	}
-	private static final int[] HANDLED = new int[]{500, 501};
 	@Override
 	public int[] getHandledCodes() {
-		return HANDLED;
+		return HANDLED_CODES;
 	}
 }

@@ -35,6 +35,7 @@ public final class FTPFuture {
 		}
 	}
 	public void setResult(FTPResult result) {
+		if (result == null) return;
 		synchronized (resultSync) {
 			if (this.result != null) throw new IllegalStateException();
 			this.result = result;

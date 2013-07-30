@@ -41,17 +41,22 @@ class FTPStreamThread extends Thread {
 				if (newline > -1) {
 					String line = getLine(buffer, newline, 2);
 					
-					if (line.length() > 4) {
-						char delimiter = line.charAt(3);
-						String content = line.substring(4);
-						int code = Integer.parseInt(line.substring(0, 3));
+					boolean contentLine = line.charAt(0) == ' ';
+					boolean validLine = contentLine || line.length() > 3;
+					if (validLine) {
+						char delimiter = contentLine ? ' ' : line.charAt(3);
+						String content = contentLine ? line.trim() : line.substring(4);
+						
+						int code = contentLine ? previousCode : Integer.parseInt(line.substring(0, 3));
 						
 						if (previousCode == -1 || previousCode != code || delimiter == ' ') {
 							FTPResponse response = new FTPResponse(code, content);
 							System.out.println("  " + response);
 							FTPState state = client.state;
-							if (!FTPHandlerRegistry.tryGlobalHandle(state, response) && state.currentFuture != null)
-								if (state.currentFuture.command.pushResponse(state, response)) state.currentFuture = null;
+							
+							if (!FTPHandlerRegistry.tryGlobalHandle(state, response) &&
+								state.currentFuture.command.pushResponse(state, response)) state.currentFuture = null;
+							
 							previousCode = -1;
 						} else if (delimiter == '-') {
 							responseBuffer.append(content).append("\r\n");

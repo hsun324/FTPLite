@@ -7,17 +7,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hsun324.ftplite.commands.FTPCommandActive;
-import com.hsun324.ftplite.commands.FTPCommandChained;
-import com.hsun324.ftplite.commands.FTPCommandConnect;
-import com.hsun324.ftplite.commands.FTPCommandNameList;
-import com.hsun324.ftplite.commands.FTPCommandPassive;
-import com.hsun324.ftplite.commands.FTPCommandPassword;
-import com.hsun324.ftplite.commands.FTPCommandPut;
-import com.hsun324.ftplite.commands.FTPCommandQuit;
-import com.hsun324.ftplite.commands.FTPCommandReinitialize;
-import com.hsun324.ftplite.commands.FTPCommandRetreive;
-import com.hsun324.ftplite.commands.FTPCommandUser;
+import com.hsun324.ftplite.commands.*;
 
 public class FTPClient {
 	public static final int DEFAULT_FTP_SERVER_PORT = 21;
@@ -100,13 +90,13 @@ public class FTPClient {
 		state.modeCommand = new FTPCommandPassive();
 	}
 
-	public FTPFutureData<String> getFile(String directory) throws IOException {
-		return sendDataCommand(FTPTransformation.FILE_TRANSFORMATION, new FTPCommandRetreive(directory));
+	public FTPFutureData<String> getFile(String file) throws IOException {
+		return sendDataCommand(FTPTransformation.FILE_TRANSFORMATION, new FTPCommandRetreive(file));
 	}
 	public FTPFuture putFile(String directory, String data) throws IOException {
 		return queueCommand(new FTPCommandChained(state.modeCommand, new FTPCommandPut(directory, data)));
 	}
-	public FTPFutureData<List<String>> getFiles(String directory) throws IOException {
+	public FTPFutureData<List<String>> getFileList(String directory) throws IOException {
 		return sendDataCommand(FTPTransformation.FILE_LIST_TRANFORMATION, new FTPCommandNameList(directory));
 	}
 	

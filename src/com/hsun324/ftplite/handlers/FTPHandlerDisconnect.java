@@ -4,16 +4,20 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
-public class FTPHandlerDisconnect implements FTPHandler {
+public class FTPHandlerDisconnect extends FTPHandler {
+	private static final int[] HANDLED_CODES = new int[]{421};
+	
 	@Override
-	public boolean handle(FTPState state, FTPResponse response) {
-		state.client.close();
-		state.currentFuture.setResult(FTPResult.FAILED);
-		return true;
+	public boolean requiresFuture() {
+		return false;
 	}
-	private static final int[] HANDLED = new int[]{421};
+	@Override
+	public FTPResult handleResponse(FTPState state, FTPResponse response) {
+		state.client.close();
+		return FTPResult.FAILED;
+	}
 	@Override
 	public int[] getHandledCodes() {
-		return HANDLED;
+		return HANDLED_CODES;
 	}
 }

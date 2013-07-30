@@ -20,9 +20,9 @@ public class FTPHandlerRegistry {
 		for (int code : codes)
 			if (!handlers.containsKey(code)) handlers.put(code, handler);
 	}
-	public static boolean tryGlobalHandle(FTPState future, FTPResponse response) {
+	public static boolean tryGlobalHandle(FTPState state, FTPResponse response) {
 		FTPHandler handler = handlers.get(response.getCode());
-		if (handler != null) return handler.handle(future, response);
+		if (handler != null) return handler.pushResponse(state, response);
 		return false;
 	}
 }
