@@ -51,7 +51,7 @@ class FTPStreamThread extends Thread {
 							System.out.println("  " + response);
 							FTPState state = client.state;
 							if (!FTPHandlerRegistry.tryGlobalHandle(state, response) && state.currentFuture != null)
-								if (state.currentFuture.command.pushResponse(state, response)) client.clearFuture();
+								if (state.currentFuture.command.pushResponse(state, response)) state.currentFuture = null;
 							previousCode = -1;
 						} else if (delimiter == '-') {
 							responseBuffer.append(content).append("\r\n");

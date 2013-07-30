@@ -140,8 +140,6 @@ public class FTPClient {
 	class FTPQueueThread extends Thread {
 		private boolean stopRequested = false;
 		
-		protected final Object futureSync = new Object();
-		
 		protected FTPFuture pullFuture() throws IOException {
 			synchronized (commandQueue) {
 				try {
@@ -157,11 +155,10 @@ public class FTPClient {
 		public void run() {
 			while (!stopRequested) {
 				try {
-					state.currentFuture = pullFuture();
-					synchronized (futureSync) {
-						state.currentFuture.execute();
-						state.currentFuture.waitUntilResult();
-					}
+					FTPFuture future = state.currentFuture = pullFuture();
+					
+					future.execute();
+					future.waitUntilResult();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -170,12 +167,6 @@ public class FTPClient {
 		}
 		public void requestStop() {
 			stopRequested = true;
-		}
-	}
-
-	public void clearFuture() {
-		synchronized (queueThread.futureSync) {
-			state.currentFuture = null;
 		}
 	}
 }
