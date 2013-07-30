@@ -16,7 +16,7 @@ public class FTPCommandPassive extends FTPCommand {
 	}
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		String content = response.getDescription();
+		String content = response.getContent();
 		int start = content.indexOf('(');
 		int end = content.indexOf(')');
 		if (start > -1 && end > -1) {

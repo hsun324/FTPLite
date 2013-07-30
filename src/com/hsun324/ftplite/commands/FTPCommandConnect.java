@@ -14,6 +14,7 @@ public class FTPCommandConnect extends FTPCommand {
 		
 		state.reset();
 		state.connected = true;
+		state.welcomeMessage = response.getContent();
 		return FTPResult.SUCCEEDED;
 	}
 }

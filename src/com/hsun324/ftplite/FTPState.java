@@ -31,8 +31,6 @@ public class FTPState {
 	public int dataPort = 0;
 	
 	public void reset() {
-		this.welcomeMessage = "";
-		
 		this.authStarted = false;
 		this.authCompleted = false;
 		this.authPassword = false;
