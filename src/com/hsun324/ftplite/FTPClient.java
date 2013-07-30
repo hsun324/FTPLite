@@ -101,31 +101,13 @@ public class FTPClient {
 	}
 
 	public FTPFutureData<String> getFile(String directory) throws IOException {
-		return sendDataCommand(new FTPTransformation<String>() {
-			@Override
-			public String transform(byte[] data) throws Exception {
-				return new String(data).replace("\r\n", "");
-			}
-		}, new FTPCommandRetreive(directory));
+		return sendDataCommand(FTPTransformation.FILE_TRANSFORMATION, new FTPCommandRetreive(directory));
 	}
-	
 	public FTPFuture putFile(String directory, String data) throws IOException {
 		return queueCommand(new FTPCommandChained(state.modeCommand, new FTPCommandPut(directory, data)));
 	}
-	
 	public FTPFutureData<List<String>> getFiles(String directory) throws IOException {
-		return sendDataCommand(new FTPTransformation<List<String>>() {
-			@Override
-			public List<String> transform(byte[] data) throws Exception {
-				String[] lines = new String(data).trim().split("\n\r");
-				List<String> list = new ArrayList<String>();
-				int length = lines.length;
-				for (int i = 0; i < length; i++)
-					list.add(lines[i]);
-				
-				return list;
-			}
-		}, new FTPCommandNameList(directory));
+		return sendDataCommand(FTPTransformation.FILE_LIST_TRANFORMATION, new FTPCommandNameList(directory));
 	}
 	
 	public <T> FTPFutureData<T> sendDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
