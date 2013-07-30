@@ -1,4 +1,4 @@
-package com.hsun324.ftplite.util;
+package com.hsun324.ftplite;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Utilities {
-	private Utilities() {}
+public class FTPUtilities {
+	private FTPUtilities() {}
 	
 	public static byte[] readAll(InputStream stream) throws IOException {
 		ByteArrayOutputStream outStream = new ByteArrayOutputStream();

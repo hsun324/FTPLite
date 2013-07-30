@@ -7,7 +7,7 @@ import com.hsun324.ftplite.FTPCommand;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
-import com.hsun324.ftplite.util.Utilities;
+import com.hsun324.ftplite.FTPUtilities;
 
 public class FTPCommandPut extends FTPCommand {
 	private final String command;
@@ -31,7 +31,7 @@ public class FTPCommandPut extends FTPCommand {
 		if (response.getCode() == 150 || response.getCode() == 125) {
 			OutputStream stream = null;
 			try {
-				stream = Utilities.openPushStream(state.modeActive, state.dataHost, state.dataPort);
+				stream = FTPUtilities.openPushStream(state.modeActive, state.dataHost, state.dataPort);
 				stream.write(data);
 				stream.flush();
 				return null;
