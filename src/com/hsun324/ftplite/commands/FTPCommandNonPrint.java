@@ -20,7 +20,6 @@ public class FTPCommandNonPrint extends FTPCommand {
 	
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		if (response.getCode() != 200) return FTPResult.FAILED;
 		return FTPResult.SUCCEEDED;
 	}
 }
