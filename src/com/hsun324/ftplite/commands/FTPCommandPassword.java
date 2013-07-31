@@ -12,7 +12,7 @@ public class FTPCommandPassword extends FTPCommand {
 	}
 	
 	@Override
-	public String getCommandContent() {
+	public String getCommandContent(FTPState state) {
 		return command;
 	}
 	@Override

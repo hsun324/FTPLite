@@ -5,10 +5,10 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
-public class FTPCommandReinitialize extends FTPCommand {
+public class FTPCommandSystem extends FTPCommand {
 	@Override
 	public String getCommandContent(FTPState state) {
-		return "REIN";
+		return "SYST";
 	}
 	@Override
 	public boolean isValidContext(FTPState state) {
@@ -16,8 +16,8 @@ public class FTPCommandReinitialize extends FTPCommand {
 	}
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		if (response.getCode() == 220) {
-			state.reset();
+		if (response.getCode() == 215) {
+			state.system = response.getContent();
 			return FTPResult.SUCCEEDED;
 		}
 		return FTPResult.FAILED;

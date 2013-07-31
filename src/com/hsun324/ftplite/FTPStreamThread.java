@@ -5,11 +5,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.hsun324.ftplite.handlers.FTPHandlerRegistry;
 
 class FTPStreamThread extends Thread {
 	public static final int DEFAULT_BUFFER_SIZE = 400;
+	private static final Pattern CONTROL_RESPONSE_PATTERN = Pattern.compile("([0-9]{3})([ -])(.*)");
 
 	private final FTPClient client;
 	public final Socket socket;
@@ -19,7 +22,6 @@ class FTPStreamThread extends Thread {
 	private final char[] buffer;
 	private boolean stopRequested = false;
 	
-	private int previousCode = -1;
 	private StringBuffer responseBuffer = new StringBuffer();
 	
 	public FTPStreamThread(FTPClient client, Socket socket) throws IOException {
@@ -37,32 +39,37 @@ class FTPStreamThread extends Thread {
 	public void run() {
 		try {
 			while (!stopRequested) {
-				int newline = findNewlineIndex(buffer, reader.read(buffer));
-				if (newline > -1) {
-					String line = getLine(buffer, newline, 2);
+				int read = reader.read(buffer);
+				int newline;
+				while ((newline = findNewlineIndex(buffer, read)) > -1) {
+					String line = new String(buffer, 0, newline);
 					
-					boolean contentLine = line.charAt(0) == ' ';
-					boolean validLine = contentLine || line.length() > 3;
-					if (validLine) {
-						char delimiter = contentLine ? ' ' : line.charAt(3);
-						String content = contentLine ? line.trim() : line.substring(4);
+					int shift = newline + 2;
+					int len = buffer.length;
+					int threshold = len - shift;
+					for(int i = 0; i < len; i++)
+						if (i < threshold) buffer[i] = buffer[i + shift];
+						else buffer[i] = 0;
+					
+					System.out.println("  " + line);
+					
+					Matcher matcher = CONTROL_RESPONSE_PATTERN.matcher(line);
+					if (matcher.find()) {
+						int code = Integer.parseInt(matcher.group(1));
+						String delim = matcher.group(2);
+						String content = matcher.group(3);
 						
-						int code = contentLine ? previousCode : Integer.parseInt(line.substring(0, 3));
-						
-						if (previousCode == -1 || previousCode != code || delimiter == ' ') {
-							FTPResponse response = new FTPResponse(code, content);
-							System.out.println("  " + response);
-							FTPState state = client.state;
+						if (delim.equals(" ")) {
+							FTPResponse response = new FTPResponse(code, responseBuffer.append(content).toString());
+							responseBuffer.setLength(0);
 							
-							if (!FTPHandlerRegistry.tryGlobalHandle(state, response) &&
-								state.currentFuture.command.pushResponse(state, response)) state.currentFuture = null;
-							
-							previousCode = -1;
-						} else if (delimiter == '-') {
-							responseBuffer.append(content).append("\r\n");
-							previousCode = code;
+							if (!FTPHandlerRegistry.tryGlobalHandle(client.state, response) &&
+								client.state.currentFuture.command.pushResponse(client.state, response))
+									client.state.currentFuture = null;
+							continue;
 						}
 					}
+					responseBuffer.append(line).append("\n");
 				}
 			}
 			reader.close();
@@ -72,19 +79,6 @@ class FTPStreamThread extends Thread {
 	}
 	public void requestStop() {
 		stopRequested = true;
-	}
-	
-	private String getLine(char[] buffer, int end, int trim) {
-		String result = new String(buffer, 0, end);
-		
-		int shift = end + trim;
-		int threshold = buffer.length - shift;
-		
-		for(int i = 0; i < shift; i++)
-			if (i < threshold) buffer[i] = buffer[i + shift];
-			else buffer[i] = 0;
-		
-		return result;
 	}
 	private int findNewlineIndex(char[] buffer, int len) {
 		for (int i = 0, j = 1; j < len; i++, j++)

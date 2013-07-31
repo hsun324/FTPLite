@@ -11,13 +11,23 @@ public abstract class FTPCommand {
 	public final boolean isExecuted() {
 		return executed;
 	}
+	public final void push(FTPState state) throws IOException {
+		if (isExecuted()) throw new IllegalStateException();
+		execute(state);
+		if (!canBeReused()) setExecuted();
+	}
+	
+	public boolean canBeReused() {
+		return false;
+	}
 
 	public void execute(FTPState state) throws IOException {
-		if (isExecuted()) throw new IllegalStateException();
-		System.out.println("> " + getCommandContent());
-		state.client.getCommandStream().write(new StringBuilder(getCommandContent()).append("\r\n").toString().getBytes());
+		// TODO: Charsets
+		StringBuilder builder = new StringBuilder(getCommandContent(state));
+		System.out.println("> " + builder.toString());
+		state.client.getCommandStream().write(builder.append("\r\n").toString().getBytes());
 	}
-	public String getCommandContent() {
+	public String getCommandContent(FTPState state) {
 		return "NOOP";
 	}
 	

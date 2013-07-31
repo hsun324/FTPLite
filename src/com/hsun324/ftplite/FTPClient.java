@@ -6,11 +6,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.hsun324.ftplite.commands.*;
 
 public class FTPClient {
 	public static final int DEFAULT_FTP_SERVER_PORT = 21;
+	private static final Pattern FILENAME_REGEX_PATTERN = Pattern.compile("([\\w-,\\s]*)\\.([A-Za-z]+)");
 	
 	public FTPClient(String host) {
 		this(host, DEFAULT_FTP_SERVER_PORT);
@@ -61,7 +64,9 @@ public class FTPClient {
 		return queueCommand(new FTPCommandChained(new FTPCommand[]{
 			firstCommand,
 			new FTPCommandUser(user),
-			new FTPCommandPassword(password)
+			new FTPCommandPassword(password),
+			new FTPCommandSystem(),
+			new FTPCommandFeatures()
 		}));
 	}
 	
@@ -99,15 +104,37 @@ public class FTPClient {
 	public FTPFutureData<List<String>> getFileList(String directory) throws IOException {
 		return sendDataCommand(FTPTransformation.FILE_LIST_TRANFORMATION, new FTPCommandNameList(directory));
 	}
-	
+
 	public <T> FTPFutureData<T> sendDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
-		return new FTPFutureData<T>(queueCommand(new FTPCommandChained(new FTPCommand[] { state.modeCommand, command }))) {
+		return sendDataCommand(function, command, null);
+	}
+	public <T> FTPFutureData<T> sendDataCommand(final FTPTransformation<T> function, FTPCommand command, String filename) throws IOException {
+		String extension = null;
+		boolean hasName = false;
+		if (filename != null) {
+			Matcher matcher = FILENAME_REGEX_PATTERN.matcher(filename);
+			if (matcher.find()) {
+				hasName = !matcher.group(1).trim().isEmpty();
+				extension = matcher.group(2);
+			}
+		}
+		
+		return new FTPFutureData<T>(queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(FTPTypeDecider.decideFTPType(extension, hasName)), state.modeCommand, command }))) {
 			@Override
 			protected T formData(byte[] result) throws Exception {
 				return function.transform(result);
 			}
 		};
 	}
+	
+	/*public <T> FTPFutureData<T> sendTransformCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
+		return new FTPFutureData<T>(queueCommand(command)) {
+			@Override
+			protected T formData(byte[] result) throws Exception {
+				return function.transform(result);
+			}
+		};
+	}*/
 	
 	class FTPQueueThread extends Thread {
 		private boolean stopRequested = false;

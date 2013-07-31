@@ -7,7 +7,7 @@ import com.hsun324.ftplite.FTPState;
 
 public class FTPCommandQuit extends FTPCommand {
 	@Override
-	public String getCommandContent() {
+	public String getCommandContent(FTPState state) {
 		return "QUIT";
 	}
 	@Override

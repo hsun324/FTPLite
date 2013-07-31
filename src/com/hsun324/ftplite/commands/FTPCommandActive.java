@@ -16,9 +16,13 @@ public class FTPCommandActive extends FTPCommand {
 	
 	private byte[] address = null;
 	private int port = 0;
+
+	public boolean canBeReused() {
+		return true;
+	}
 	
 	@Override
-	public String getCommandContent() {
+	public String getCommandContent(FTPState state) {
 		try {
 			address = InetAddress.getLocalHost().getAddress();
 			port = findPort();
