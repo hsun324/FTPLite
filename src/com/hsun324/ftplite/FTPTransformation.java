@@ -13,7 +13,14 @@ public abstract class FTPTransformation<T> {
 	};
 	
 	private static final FTPEntity[] FTPENTITY_PROTOTYPE_ARRAY = new FTPEntity[0];
-	public static final FTPTransformation<FTPEntity[]> META_FILE_LIST_TRANFORMATION = new FTPTransformation<FTPEntity[]>() {
+	
+	public static class FileListTransformation extends FTPTransformation<FTPEntity[]> {
+		protected final FTPFilename currentDirectory;
+		
+		public FileListTransformation(FTPFilename currentDirectory) {
+			this.currentDirectory = currentDirectory;
+		}
+		
 		@Override
 		public FTPEntity[] transform(byte[] data) throws Exception {
 			// TODO: better newline splitting
@@ -23,7 +30,7 @@ public abstract class FTPTransformation<T> {
 			
 			int length = lines.length;
 			for (int i = 0; i < length; i++) {
-				FTPEntity entity = FTPEntity.parseEntity(lines[i]);
+				FTPEntity entity = FTPEntity.parseEntity(currentDirectory, lines[i]);
 				if (entity != null) list.add(entity);
 			}
 			

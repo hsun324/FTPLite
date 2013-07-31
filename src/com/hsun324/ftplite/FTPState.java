@@ -34,6 +34,8 @@ public class FTPState {
 	
 	public boolean typeImage = false;
 	
+	public FTPFilename workingDirectory = FTPFilename.ROOT_DIRECTORY;
+	
 	public boolean featureExtPassive = false;
 
 	public boolean featureModificationTime = false;
@@ -62,6 +64,8 @@ public class FTPState {
 		this.modeActive = false;
 		
 		this.typeImage = false;
+		
+		this.workingDirectory = FTPFilename.ROOT_DIRECTORY;
 		
 		this.featureExtPassive = false;
 		

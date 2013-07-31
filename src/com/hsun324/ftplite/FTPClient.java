@@ -106,9 +106,13 @@ public class FTPClient {
 		return queueFileCommand(new FTPCommandPut(file, data), file);
 	}
 	public FTPFutureData<FTPEntity[]> getFileList(String directory) throws IOException {
-		return queueDataCommand(FTPTransformation.META_FILE_LIST_TRANFORMATION, new FTPCommandList(directory));
+		return queueDataCommand(new FTPTransformation.FileListTransformation(state.workingDirectory), new FTPCommandList(directory));
 	}
-
+	
+	public FTPFuture changeWorkingDirectory(String directory) throws IOException {
+		// TODO: relative/absolute path resolution
+		return queueCommand(new FTPCommandCWD(directory));
+	}
 	public FTPFuture queueFileCommand(FTPCommand command) throws IOException {
 		return queueFileCommand(command, null);
 	}

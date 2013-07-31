@@ -8,17 +8,17 @@ import java.util.regex.Pattern;
 public class FTPEntity {
 	private static final Pattern LIST_ENTRY_PATTERN = Pattern.compile("([-drwx]{10})\\s+(?:[^\\s]+\\s+){6,7}(.+)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 	private static final Pattern META_FILE_LIST_ENTRY_PATTERN = Pattern.compile("(?:((?:[^;]+=[^;]+;)*) )?([^;]+)$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-	public static FTPEntity parseEntity(String line) {
+	public static FTPEntity parseEntity(FTPFilename currentDirectory, String line) {
 		try {
 			Matcher matcher = LIST_ENTRY_PATTERN.matcher(line);
 			if (matcher.find()) {
-				String name = matcher.group(2);
+				FTPFilename name = new FTPFilename(currentDirectory, matcher.group(2));
 				if (matcher.group(1).toLowerCase().contains("d")) return new FTPEntity(name, FTPEntityType.DIRECTORY);
 				else return new FTPEntity(name, FTPEntityType.FILE);
 			} else {
 				matcher = META_FILE_LIST_ENTRY_PATTERN.matcher(line);
 				if (matcher.find()) {
-					String name = matcher.group(2);
+					FTPFilename name = new FTPFilename(currentDirectory, matcher.group(2));
 					FTPEntityType type = FTPEntityType.FILE;
 					Date modified = null;
 					int size = 0;
@@ -62,22 +62,22 @@ public class FTPEntity {
 	}
 
 
-	private final String name;
+	private final FTPFilename name;
 	private final FTPEntityType type;
 	private final Date modified;
 	private final int size;
 	
-	protected FTPEntity(String name, FTPEntityType type) {
+	protected FTPEntity(FTPFilename name, FTPEntityType type) {
 		this(name, type, null, 0);
 	}
-	protected FTPEntity(String name, FTPEntityType type, Date modified, int size) {
+	protected FTPEntity(FTPFilename name, FTPEntityType type, Date modified, int size) {
 		this.name = name;
 		this.type = type;
 		this.modified = modified;
 		this.size = size;
 	}
 	
-	public String getName() {
+	public FTPFilename getName() {
 		return name;
 	}
 	public FTPEntityType getType() {
@@ -88,6 +88,11 @@ public class FTPEntity {
 	}
 	public int getSize() {
 		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getType().name() + " " + this.getName();
 	}
 	
 	public enum FTPEntityType {

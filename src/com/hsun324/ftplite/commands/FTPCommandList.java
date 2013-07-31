@@ -12,15 +12,18 @@ import com.hsun324.ftplite.FTPUtilities;
 public class FTPCommandList extends FTPCommand {
 	private final String directory;
 	private byte[] data = null;
-	
+
+	public FTPCommandList() {
+		this(null);
+	}
 	public FTPCommandList(String directory) {
-		this.directory = directory;
+		this.directory = directory != null && !directory.isEmpty() ? " " + directory : "";
 	}
 	
 	@Override
 	public String getCommandContent(FTPState state) {
-		if (state.featureFileMetadata) return "MLSD " + directory;
-		return "LIST " + directory;
+		if (state.featureFileMetadata) return "MLSD" + directory;
+		return "LIST" + directory;
 	}
 	@Override
 	public boolean isValidContext(FTPState state) {

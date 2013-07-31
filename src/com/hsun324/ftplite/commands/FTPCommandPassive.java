@@ -24,25 +24,28 @@ public class FTPCommandPassive extends FTPCommand {
 	}
 	@Override
 	public boolean isValidContext(FTPState state) {
-		return state.authCompleted && (state.modeActive || state.modeCommand == null);
+		return state.authCompleted;
 	}
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		String content = response.getContent();
 		try {
 			if (state.featureExtPassive) {
-				Matcher matcher = EXTENDED_PASSIVE_REPONSE_PATTERN.matcher(content);
-				if (matcher.find()) {
-					state.dataHost = state.host;
-					state.dataPort = Integer.parseInt(matcher.group(2));
-					return FTPResult.SUCCEEDED;
+				if (response.getCode() == 229) {
+					Matcher matcher = EXTENDED_PASSIVE_REPONSE_PATTERN.matcher(response.getContent());
+					if (matcher.find()) {
+						state.dataHost = state.host;
+						state.dataPort = Integer.parseInt(matcher.group(2));
+						return FTPResult.SUCCEEDED;
+					}
 				}
 			} else {
-				Matcher matcher = PASSIVE_REPONSE_PATTERN.matcher(content);
-				if (matcher.find()) {
-					state.dataHost = matcher.group(1).replace('.', ',');
-					state.dataPort = Integer.parseInt(matcher.group(2)) * 256 + Integer.parseInt(matcher.group(3));
-					return FTPResult.SUCCEEDED;
+				if (response.getCode() == 227) {
+					Matcher matcher = PASSIVE_REPONSE_PATTERN.matcher(response.getContent());
+					if (matcher.find()) {
+						state.dataHost = matcher.group(1).replace('.', ',');
+						state.dataPort = Integer.parseInt(matcher.group(2)) * 256 + Integer.parseInt(matcher.group(3));
+						return FTPResult.SUCCEEDED;
+					}
 				}
 			}
 		} catch (NumberFormatException e) { }
