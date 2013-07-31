@@ -112,7 +112,7 @@ public class FTPClient {
 		return queueFileCommand(command, null);
 	}
 	public FTPFuture queueFileCommand(FTPCommand command, String file) throws IOException {
-		return queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(getFTPType(file)), state.modeCommand, command }));
+		return queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(getFTPType(file)), state.printCommand, state.modeCommand, command }));
 	}
 	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
 		return queueDataCommand(function, command, null);
