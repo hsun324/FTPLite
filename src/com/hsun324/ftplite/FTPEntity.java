@@ -2,8 +2,6 @@ package com.hsun324.ftplite;
 
 import java.util.Date;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
