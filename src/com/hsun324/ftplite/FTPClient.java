@@ -69,7 +69,8 @@ public class FTPClient {
 			new FTPCommandUser(user),
 			new FTPCommandPassword(password),
 			new FTPCommandSystem(),
-			new FTPCommandFeatures()
+			new FTPCommandFeatures(),
+			new FTPCommandUTF8()
 		}));
 	}
 	

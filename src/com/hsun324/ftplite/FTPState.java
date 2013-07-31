@@ -42,11 +42,14 @@ public class FTPState {
 	public boolean featureFileMetadata = false;
 	public boolean featureFileSize = false;
 	public boolean featureUTF8 = false;
+	
+	public boolean acceptUTF8 = false;
 
 	public String dataHost = "";
 	public int dataPort = 0;
 
 	public String system = "";
+
 	
 	public void reset() {
 		this.authStarted = false;
@@ -61,10 +64,14 @@ public class FTPState {
 		this.typeImage = false;
 		
 		this.featureExtPassive = false;
+		
+		this.featureModificationTime = false;
 
 		this.featureFileMetadata = false;
-		this.featureModificationTime = false;
 		this.featureFileSize = false;
+		this.featureUTF8 = false;
+		
+		this.acceptUTF8 = false;
 		
 		this.dataHost = "";
 		this.dataPort = 0;

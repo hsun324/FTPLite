@@ -16,7 +16,9 @@ public final class FTPFuture {
 	protected FTPResult result;
 	
 	public synchronized void execute() throws IOException {
-		command.execute(client.state);
+		if (command.isValidContext(client.state)) {
+			command.execute(client.state);
+		} else result = FTPResult.FAILED;
 		command.setExecuted();
 	}
 	

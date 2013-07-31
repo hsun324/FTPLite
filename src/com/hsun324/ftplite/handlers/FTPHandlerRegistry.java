@@ -11,7 +11,6 @@ public class FTPHandlerRegistry {
 	private static final Map<Integer, FTPHandler> handlers = new HashMap<Integer, FTPHandler>();
 	
 	static {
-		addHandler(new FTPHandlerSyntax());
 		addHandler(new FTPHandlerDisconnect());
 	}
 	
