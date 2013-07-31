@@ -22,18 +22,26 @@ public abstract class FTPFutureData<T> {
 	public final void setResult(FTPResult result) {
 		future.setResult(result);
 	}
-	
+
+	protected boolean set = false;
+	protected T data = null;
 	public final T getData() throws IOException {
+		if (set) return data;
+		
+		T ret = null;
 		FTPResult result = future.getResult();
-		if (!result.success) return null;
-		if (result.data == null) return null;
-		try {
-			return formData(result.data);
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IOException(e);
+		if (result.success && result.data != null) {
+			try {
+				ret = formData(result.data);
+			} catch (IOException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new IOException(e);
+			}
 		}
+		set = true;
+		data = ret;
+		return data;
 	}
 	protected abstract T formData(byte[] result) throws Exception;
 }

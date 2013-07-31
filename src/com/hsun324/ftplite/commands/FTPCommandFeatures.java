@@ -37,7 +37,8 @@ public class FTPCommandFeatures extends FTPCommand {
 					case "MDTM":
 						state.featureModificationTime = true; break;
 					case "MLST":
-						state.featureFileMetadata = true; break;
+						state.featureFileMetadata = true;
+						state.featureFileMetadataParams = content.split(";"); break;
 					case "SIZE":
 						state.featureFileSize = true; break;
 					case "UTF8":

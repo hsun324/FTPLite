@@ -2,7 +2,6 @@ package com.hsun324.ftplite;
 
 import com.hsun324.ftplite.commands.FTPCommandNonPrint;
 import com.hsun324.ftplite.commands.FTPCommandPassive;
-import com.hsun324.ftplite.commands.FTPCommandType;
 
 
 public class FTPState {
@@ -40,6 +39,7 @@ public class FTPState {
 	public boolean featureModificationTime = false;
 	
 	public boolean featureFileMetadata = false;
+	public String[] featureFileMetadataParams = null;
 	public boolean featureFileSize = false;
 	public boolean featureUTF8 = false;
 	
@@ -68,6 +68,7 @@ public class FTPState {
 		this.featureModificationTime = false;
 
 		this.featureFileMetadata = false;
+		this.featureFileMetadataParams = null;
 		this.featureFileSize = false;
 		this.featureUTF8 = false;
 		

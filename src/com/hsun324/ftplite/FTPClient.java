@@ -105,8 +105,8 @@ public class FTPClient {
 	public FTPFuture putFile(String file, String data) throws IOException {
 		return queueFileCommand(new FTPCommandPut(file, data), file);
 	}
-	public FTPFutureData<List<String>> getFileList(String directory) throws IOException {
-		return queueDataCommand(FTPTransformation.FILE_LIST_TRANFORMATION, new FTPCommandNameList(directory));
+	public FTPFutureData<FTPEntity[]> getFileList(String directory) throws IOException {
+		return queueDataCommand(FTPTransformation.META_FILE_LIST_TRANFORMATION, new FTPCommandList(directory));
 	}
 
 	public FTPFuture queueFileCommand(FTPCommand command) throws IOException {

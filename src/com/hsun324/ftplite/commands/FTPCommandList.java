@@ -9,17 +9,18 @@ import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 import com.hsun324.ftplite.FTPUtilities;
 
-public class FTPCommandNameList extends FTPCommand {
-	private final String command;
+public class FTPCommandList extends FTPCommand {
+	private final String directory;
 	private byte[] data = null;
 	
-	public FTPCommandNameList(String directory) {
-		this.command = "NLST " + directory;
+	public FTPCommandList(String directory) {
+		this.directory = directory;
 	}
 	
 	@Override
 	public String getCommandContent(FTPState state) {
-		return command;
+		if (state.featureFileMetadata) return "MLSD " + directory;
+		return "LIST " + directory;
 	}
 	@Override
 	public boolean isValidContext(FTPState state) {
