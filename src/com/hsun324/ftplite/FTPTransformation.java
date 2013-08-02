@@ -8,7 +8,7 @@ public abstract class FTPTransformation<T> {
 		@Override
 		public String transform(byte[] data) throws Exception {
 			// TODO: better newline culling
-			return new String(data).replace("\r\n", "");
+			return new String(data, FTPCharset.ASCII).replaceAll("\r(\n|(?!\n))", "\n");
 		}
 	};
 	

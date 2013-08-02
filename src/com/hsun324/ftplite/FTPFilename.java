@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FTPFilename {
 	private static final String[] STRING_PROTOTYPE_ARRAY = new String[0];
-
+	
 	public static final FTPFilename CURRENT_DIRECTORY = new FTPFilename("", "");
 	public static final FTPFilename ROOT_DIRECTORY = new FTPFilename("/");
 	
@@ -23,6 +23,7 @@ public class FTPFilename {
 	
 	protected final String path;
 	protected final boolean leadingSlash;
+	protected final boolean current;
 	protected final String[] tokens;
 	public FTPFilename(String path) {
 		this(CURRENT_DIRECTORY, path);
@@ -40,11 +41,25 @@ public class FTPFilename {
 		
 		this.tokens = tokenList.toArray(STRING_PROTOTYPE_ARRAY);
 		this.leadingSlash = parentStartsSlash || pathStartsSlash;
+		this.current = parent.trim().isEmpty() && path.trim().isEmpty();
 		this.path = (this.leadingSlash ? "/" : "") + joinTokens(this.tokens, "/");
 	}
 	
 	@Override
 	public String toString() {
 		return path;
+	}
+	
+	public boolean isCurrentDirectory() {
+		return current;
+	}
+	public String getQualifiedPath() {
+		return path;
+	}
+
+	protected String name = null;
+	public String getFilename() {
+		if (name == null) this.name = (tokens.length == 0 ? "" : tokens[tokens.length - 1]);
+		return this.name;
 	}
 }

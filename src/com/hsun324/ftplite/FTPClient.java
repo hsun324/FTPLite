@@ -6,15 +6,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.hsun324.ftplite.commands.*;
 
 public class FTPClient {
 	public static final int DEFAULT_FTP_SERVER_PORT = 21;
-	private static final Pattern FILENAME_REGEX_PATTERN = Pattern.compile("^[-\\w,\\s/]*/?([-\\w,\\s.]*)$");
-	private static final Pattern FILEEXT_REGEX_PATTERN = Pattern.compile("^([-\\w,\\s]*)\\.([A-Za-z]+)$");
 	
 	public FTPClient(String host) {
 		this(host, DEFAULT_FTP_SERVER_PORT);
@@ -53,7 +49,7 @@ public class FTPClient {
 		if (!state.connected) {
 			connection = new Socket(state.host, state.port);
 			
-			queueThread = new FTPQueueThread();
+			queueThread = new FTPQueueThread(this);
 			queueThread.start();
 			
 			responseThread = new FTPStreamThread(this, connection);
@@ -100,29 +96,43 @@ public class FTPClient {
 	}
 
 	public FTPFutureData<String> getFile(String file) throws IOException {
+		return getFile(getRelativeFilename(file));
+	}
+	public FTPFutureData<String> getFile(FTPFilename file) throws IOException {
 		return queueDataCommand(FTPTransformation.FILE_TRANSFORMATION, new FTPCommandRetreive(file), file);
 	}
+	
 	public FTPFuture putFile(String file, String data) throws IOException {
+		return putFile(getRelativeFilename(file), data);
+	}
+	public FTPFuture putFile(FTPFilename file, String data) throws IOException {
 		return queueFileCommand(new FTPCommandPut(file, data), file);
 	}
+	public FTPFuture putFile(String file, byte[] data) throws IOException {
+		return putFile(getRelativeFilename(file), data);
+	}
+	public FTPFuture putFile(FTPFilename file, byte[] data) throws IOException {
+		return queueFileCommand(new FTPCommandPut(file, data), file);
+	}
+	
 	public FTPFutureData<FTPEntity[]> getFileList(String directory) throws IOException {
-		return queueDataCommand(new FTPTransformation.FileListTransformation(state.workingDirectory), new FTPCommandList(directory));
+		return getFileList(getRelativeFilename(directory));
+	}
+	public FTPFutureData<FTPEntity[]> getFileList(FTPFilename directory) throws IOException {
+		return queueDataCommand(new FTPTransformation.FileListTransformation(directory), new FTPCommandList(directory));
 	}
 	
 	public FTPFuture changeWorkingDirectory(String directory) throws IOException {
-		// TODO: relative/absolute path resolution
-		return queueCommand(new FTPCommandCWD(directory));
+		return changeWorkingDirectory(getRelativeFilename(directory));
 	}
-	public FTPFuture queueFileCommand(FTPCommand command) throws IOException {
-		return queueFileCommand(command, null);
+	public FTPFuture changeWorkingDirectory(FTPFilename directory) throws IOException {
+		return queueCommand(new FTPCommandChained(new FTPCommandWorkingDirectory(directory), new FTPCommandWorkingDirectory()));
 	}
-	public FTPFuture queueFileCommand(FTPCommand command, String file) throws IOException {
-		return queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(getFTPType(file)), state.printCommand, state.modeCommand, command }));
-	}
+	
 	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
 		return queueDataCommand(function, command, null);
 	}
-	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command, String file) throws IOException {
+	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command, FTPFilename file) throws IOException {
 		return new FTPFutureData<T>(queueFileCommand(command, file)) {
 			@Override
 			protected T formData(byte[] result) throws Exception {
@@ -130,62 +140,24 @@ public class FTPClient {
 			}
 		};
 	}
-	
-	private char getFTPType(String file) {
-		String extension = null;
-		boolean hasName = false;
-		if (file != null) {
-			Matcher matcher = FILENAME_REGEX_PATTERN.matcher(file);
-			if (matcher.find()) {
-				matcher = FILEEXT_REGEX_PATTERN.matcher(matcher.group(1));
-				if (matcher.find()) {
-					hasName = !matcher.group(1).trim().isEmpty();
-					extension = matcher.group(2);
-				}
-			}
-		}
-		return FTPTypeDecider.decideFTPType(extension, hasName);
+	public FTPFuture queueFileCommand(FTPCommand command) throws IOException {
+		return queueFileCommand(command, null);
+	}
+	public FTPFuture queueFileCommand(FTPCommand command, FTPFilename file) throws IOException {
+		return queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(getFTPType(file)), state.printCommand, state.modeCommand, command }));
 	}
 	
-	/*public <T> FTPFutureData<T> sendTransformCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
-		return new FTPFutureData<T>(queueCommand(command)) {
-			@Override
-			protected T formData(byte[] result) throws Exception {
-				return function.transform(result);
-			}
-		};
-	}*/
-	
-	class FTPQueueThread extends Thread {
-		private boolean stopRequested = false;
-		
-		protected FTPFuture pullFuture() throws IOException {
-			synchronized (commandQueue) {
-				try {
-					while (commandQueue.size() == 0)
-						commandQueue.wait();
-					return commandQueue.remove(0);
-				} catch (InterruptedException e) {
-					throw new IOException(e);
-				}
-			}
+	private FTPFilename getRelativeFilename(String file) {
+		return new FTPFilename(state.workingDirectory, file);
+	}
+	private char getFTPType(FTPFilename file) {
+		if (file == null) return FTPTypeDecider.decideFTPType("", false);
+		String filename = file.getFilename();
+		int index = filename.lastIndexOf('.');
+		if (index > -1) {
+			String extension = filename.substring(0, index);
+			return FTPTypeDecider.decideFTPType(extension, index != 0);
 		}
-		@Override
-		public void run() {
-			while (!stopRequested) {
-				try {
-					FTPFuture future = state.currentFuture = pullFuture();
-					
-					future.execute();
-					future.waitUntilResult();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}
-		public void requestStop() {
-			stopRequested = true;
-		}
+		return FTPTypeDecider.decideFTPType("", !filename.trim().isEmpty());
 	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.hsun324.ftplite.FTPCommand;
+import com.hsun324.ftplite.FTPFilename;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
@@ -16,8 +17,8 @@ public class FTPCommandList extends FTPCommand {
 	public FTPCommandList() {
 		this(null);
 	}
-	public FTPCommandList(String directory) {
-		this.directory = directory != null && !directory.isEmpty() ? " " + directory : "";
+	public FTPCommandList(FTPFilename directory) {
+		this.directory = directory != null && !directory.isCurrentDirectory() ? " " + directory.getQualifiedPath() : "";
 	}
 	
 	@Override

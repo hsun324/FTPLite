@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.hsun324.ftplite.FTPCommand;
+import com.hsun324.ftplite.FTPFilename;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
@@ -13,8 +14,9 @@ public class FTPCommandRetreive extends FTPCommand {
 	private final String command;
 	private byte[] data = null;
 	
-	public FTPCommandRetreive(String file) {
-		this.command = "RETR " + file;
+	public FTPCommandRetreive(FTPFilename file) {
+		if (file == null || file.isCurrentDirectory()) throw new IllegalArgumentException();
+		this.command = "RETR " + file.getQualifiedPath();
 	}
 	
 	@Override

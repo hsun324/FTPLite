@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.hsun324.ftplite.FTPCommand;
+import com.hsun324.ftplite.FTPFilename;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
@@ -13,9 +14,13 @@ public class FTPCommandPut extends FTPCommand {
 	private final String command;
 	private byte[] data = null;
 	
-	public FTPCommandPut(String file, String data) {
-		this.command = "STOR " + file;
-		this.data = data.getBytes();
+	public FTPCommandPut(FTPFilename file, String data) {
+		this(file, data.getBytes());
+	}
+	public FTPCommandPut(FTPFilename file, byte[] data) {
+		if (file == null || file.isCurrentDirectory()) throw new IllegalArgumentException();
+		this.command = "STOR " + file.getQualifiedPath();
+		this.data = data;
 	}
 	
 	@Override
