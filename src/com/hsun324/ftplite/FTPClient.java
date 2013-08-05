@@ -218,7 +218,7 @@ public class FTPClient {
 		
 		String filename = file.getName();
 		int index = filename.lastIndexOf('.');
-		if (index > -1) return FTPTypeDecider.decideFTPType(filename.substring(0, index), index != 0);
+		if (index > -1) return FTPTypeDecider.decideFTPType(filename.substring(index + 1), index != 0);
 		return FTPTypeDecider.decideFTPType("", !filename.isEmpty());
 	}
 	

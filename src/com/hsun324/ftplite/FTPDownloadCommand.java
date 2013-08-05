@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class FTPDownloadCommand extends FTPCommand {
+	private Object downloadSync = new Object();
 	private InputStream download = null;
 	private byte[] data = null;
+	
+	private boolean stopRequested = false;
 	
 	public final InputStream getDownload() {
 		return download;
@@ -13,15 +16,32 @@ public abstract class FTPDownloadCommand extends FTPCommand {
 	public void execute(FTPState state) throws IOException {
 		// TODO: Async
 		super.execute(state);
-		download = FTPUtilities.openTransferStream(state.modeActive, state.dataHost, state.dataPort);
+		synchronized (downloadSync) {
+			download = FTPUtilities.openTransferStream(state.modeActive, state.dataHost, state.dataPort);
+			downloadSync.notify();
+		}
 	}
+	
+	@Override
+	public void quitExecution() {
+		synchronized (downloadSync) {
+			stopRequested = true;
+			downloadSync.notifyAll();
+		}
+	}
+	
 	@Override
 	public final FTPResult handleResponse(FTPState state, FTPResponse response) {
 		if (response.getCode() == 150 || response.getCode() == 125) {
 			try {
-				data = processData(state, response, FTPUtilities.readAll(download));
+				synchronized (downloadSync) {
+					while (download == null && !stopRequested) downloadSync.wait();
+					if (download != null) data = processData(state, response, FTPUtilities.readAll(download));
+				}
 				return null;
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
 				try {

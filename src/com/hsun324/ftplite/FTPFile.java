@@ -24,7 +24,7 @@ public class FTPFile {
 	}
 	public FTPFile(byte[] data, Charset encoding) {
 		this.isBinary = false;
-		this.text = new String(data, encoding).replaceAll("\r(\n|(?!\n))", "\n");
+		this.text = new String(data, encoding).replaceAll("(\n|\r)\r\n", "\r\n");
 		this.encoding = encoding;
 		
 		this.source = data;

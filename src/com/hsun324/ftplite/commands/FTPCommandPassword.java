@@ -21,8 +21,14 @@ public class FTPCommandPassword extends FTPCommand {
 	}
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		if (response.getCode() == 230) state.authCompleted = true;
-		else return FTPResult.FAILED;
-		return FTPResult.SUCCEEDED;
+		if (response.getCode() == 230) {
+			state.authCompleted = true;
+			return FTPResult.SUCCEEDED;
+		}
+		else {
+			state.authStarted = false;
+			state.authPassword = false;
+			return FTPResult.FAILED;
+		}
 	}
 }
