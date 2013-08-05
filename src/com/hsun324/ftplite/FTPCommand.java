@@ -22,10 +22,9 @@ public abstract class FTPCommand {
 	}
 
 	public void execute(FTPState state) throws IOException {
-		// TODO: Charsets
 		StringBuilder builder = new StringBuilder(getCommandContent(state));
 		System.out.println("> " + builder.toString());
-		state.client.getCommandStream().write(builder.append("\r\n").toString().getBytes());
+		state.client.getCommandStream().write(builder.append(FTPCharset.NEWLINE).toString().getBytes(FTPCharset.ASCII));
 	}
 	public String getCommandContent(FTPState state) {
 		return "NOOP";

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hsun324.ftplite.commands.*;
+import com.hsun324.ftplite.commands.FTPCommandDirectory.DirectoryAction;
 
 public class FTPClient {
 	public static final int DEFAULT_FTP_SERVER_PORT = 21;
@@ -95,38 +96,23 @@ public class FTPClient {
 		state.modeCommand = new FTPCommandPassive();
 	}
 
-	public FTPFutureData<String> getFile(String file) throws IOException {
-		return getFile(getRelativeFilename(file));
-	}
 	public FTPFutureData<String> getFile(FTPFilename file) throws IOException {
 		return queueDataCommand(FTPTransformation.FILE_TRANSFORMATION, new FTPCommandRetreive(file), file);
-	}
-	
-	public FTPFuture putFile(String file, String data) throws IOException {
-		return putFile(getRelativeFilename(file), data);
 	}
 	public FTPFuture putFile(FTPFilename file, String data) throws IOException {
 		return queueFileCommand(new FTPCommandPut(file, data), file);
 	}
-	public FTPFuture putFile(String file, byte[] data) throws IOException {
-		return putFile(getRelativeFilename(file), data);
-	}
 	public FTPFuture putFile(FTPFilename file, byte[] data) throws IOException {
 		return queueFileCommand(new FTPCommandPut(file, data), file);
-	}
-	
-	public FTPFutureData<FTPEntity[]> getFileList(String directory) throws IOException {
-		return getFileList(getRelativeFilename(directory));
 	}
 	public FTPFutureData<FTPEntity[]> getFileList(FTPFilename directory) throws IOException {
 		return queueDataCommand(new FTPTransformation.FileListTransformation(directory), new FTPCommandList(directory));
 	}
-	
-	public FTPFuture changeWorkingDirectory(String directory) throws IOException {
-		return changeWorkingDirectory(getRelativeFilename(directory));
-	}
 	public FTPFuture changeWorkingDirectory(FTPFilename directory) throws IOException {
-		return queueCommand(new FTPCommandChained(new FTPCommandWorkingDirectory(directory), new FTPCommandWorkingDirectory()));
+		return queueCommand(new FTPCommandChained(new FTPCommandDirectory(DirectoryAction.CHANGE, directory), new FTPCommandDirectory()));
+	}
+	public FTPFutureData<String> getWorkingDirectory(FTPFilename directory) throws IOException {
+		return queueDataCommand(FTPTransformation.ASCII_TRANSFORMATION, new FTPCommandDirectory());
 	}
 	
 	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException {
@@ -140,24 +126,27 @@ public class FTPClient {
 			}
 		};
 	}
+	
 	public FTPFuture queueFileCommand(FTPCommand command) throws IOException {
 		return queueFileCommand(command, null);
 	}
 	public FTPFuture queueFileCommand(FTPCommand command, FTPFilename file) throws IOException {
 		return queueCommand(new FTPCommandChained(new FTPCommand[] { new FTPCommandType(getFTPType(file)), state.printCommand, state.modeCommand, command }));
 	}
-	
-	private FTPFilename getRelativeFilename(String file) {
+
+	public FTPFilename getAbsoluteFilename(String file) {
+		return new FTPFilename("/", file);
+	}
+	public FTPFilename getRelativeFilename(String file) {
 		return new FTPFilename(state.workingDirectory, file);
 	}
+	
 	private char getFTPType(FTPFilename file) {
-		if (file == null) return FTPTypeDecider.decideFTPType("", false);
-		String filename = file.getFilename();
+		if (file == null) return FTPTypeDecider.ASCII;
+		
+		String filename = file.getName();
 		int index = filename.lastIndexOf('.');
-		if (index > -1) {
-			String extension = filename.substring(0, index);
-			return FTPTypeDecider.decideFTPType(extension, index != 0);
-		}
-		return FTPTypeDecider.decideFTPType("", !filename.trim().isEmpty());
+		if (index > -1) return FTPTypeDecider.decideFTPType(filename.substring(0, index), index != 0);
+		return FTPTypeDecider.decideFTPType("", !filename.isEmpty());
 	}
 }

@@ -7,12 +7,19 @@ public abstract class FTPTransformation<T> {
 	public static final FTPTransformation<String> FILE_TRANSFORMATION = new FTPTransformation<String>() {
 		@Override
 		public String transform(byte[] data) throws Exception {
-			// TODO: better newline culling
+			// TODO: proper newline culling
 			return new String(data, FTPCharset.ASCII).replaceAll("\r(\n|(?!\n))", "\n");
 		}
 	};
 	
 	private static final FTPEntity[] FTPENTITY_PROTOTYPE_ARRAY = new FTPEntity[0];
+
+	public static final FTPTransformation<String> ASCII_TRANSFORMATION = new FTPTransformation<String>() {
+		@Override
+		public String transform(byte[] data) throws Exception {
+			return new String(data, FTPCharset.ASCII);
+		}
+	};
 	
 	public static class FileListTransformation extends FTPTransformation<FTPEntity[]> {
 		protected final FTPFilename currentDirectory;
@@ -23,7 +30,7 @@ public abstract class FTPTransformation<T> {
 		
 		@Override
 		public FTPEntity[] transform(byte[] data) throws Exception {
-			// TODO: better newline splitting
+			// TODO: proper newline splitting
 			String[] lines = new String(data).split("\n\r|\n|\r");
 			
 			List<FTPEntity> list = new ArrayList<FTPEntity>();

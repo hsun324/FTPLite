@@ -8,4 +8,5 @@ public class FTPCharset {
 		if (Charset.isSupported("US-ASCII")) ASCII = Charset.forName("US-ASCII");
 		else ASCII = Charset.defaultCharset();
 	}
+	public static final Object NEWLINE = "\r\n";
 }

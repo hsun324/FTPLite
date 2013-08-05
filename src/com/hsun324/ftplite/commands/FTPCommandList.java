@@ -18,7 +18,8 @@ public class FTPCommandList extends FTPCommand {
 		this(null);
 	}
 	public FTPCommandList(FTPFilename directory) {
-		this.directory = directory != null && !directory.isCurrentDirectory() ? " " + directory.getQualifiedPath() : "";
+		// TODO: Current Directory Test
+		this.directory = directory != null ? " " + directory.getPath() : "";
 	}
 	
 	@Override

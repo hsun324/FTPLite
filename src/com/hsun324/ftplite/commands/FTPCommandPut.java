@@ -18,8 +18,9 @@ public class FTPCommandPut extends FTPCommand {
 		this(file, data.getBytes());
 	}
 	public FTPCommandPut(FTPFilename file, byte[] data) {
-		if (file == null || file.isCurrentDirectory()) throw new IllegalArgumentException();
-		this.command = "STOR " + file.getQualifiedPath();
+		// TODO: Current Directory / Directory Test
+		if (file == null) throw new IllegalArgumentException();
+		this.command = "STOR " + file.getPath();
 		this.data = data;
 	}
 	

@@ -15,8 +15,9 @@ public class FTPCommandRetreive extends FTPCommand {
 	private byte[] data = null;
 	
 	public FTPCommandRetreive(FTPFilename file) {
-		if (file == null || file.isCurrentDirectory()) throw new IllegalArgumentException();
-		this.command = "RETR " + file.getQualifiedPath();
+		// TODO: Current Directory / File Test
+		if (file == null) throw new IllegalArgumentException();
+		this.command = "RETR " + file.getPath();
 	}
 	
 	@Override
