@@ -23,7 +23,6 @@ public class FTPFile {
 		this.source = text.getBytes(encoding);
 	}
 	public FTPFile(byte[] data, Charset encoding) {
-		// TODO: proper newline culling
 		this.isBinary = false;
 		this.text = new String(data, encoding).replaceAll("\r(\n|(?!\n))", "\n");
 		this.encoding = encoding;

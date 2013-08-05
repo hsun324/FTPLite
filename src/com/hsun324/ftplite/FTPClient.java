@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,6 +17,8 @@ import com.hsun324.ftplite.commands.FTPCommandFile.FileAction;
 import com.hsun324.ftplite.handlers.FTPHandlerRegistry;
 
 public class FTPClient {
+	// TODO: Exception handling everywhere
+	
 	public static final int DEFAULT_FTP_SERVER_PORT = 21;
 	
 	private static int THREAD_NAME_TICKER = 0;

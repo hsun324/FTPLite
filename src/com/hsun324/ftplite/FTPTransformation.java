@@ -27,7 +27,7 @@ public abstract class FTPTransformation<T> {
 		@Override
 		public FTPEntity[] transform(FTPState state, byte[] data) throws Exception {
 			// TODO: proper newline splitting
-			String[] lines = new String(data).split("\n\r|\n|\r");
+			String[] lines = new String(data).split("\r\n?|\n\r?");
 			List<FTPEntity> list = new ArrayList<FTPEntity>();
 			int length = lines.length;
 			for (int i = 0; i < length; i++) {

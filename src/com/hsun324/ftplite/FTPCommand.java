@@ -42,7 +42,7 @@ public abstract class FTPCommand {
 			
 			FTPResult result = handleResponse(state, response);
 			if (result != null) {
-				future.setResult(result);
+				if (!future.isResultSet()) future.setResult(result);
 				return true;
 			}
 			return false;
