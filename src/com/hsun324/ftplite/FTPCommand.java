@@ -30,16 +30,19 @@ public abstract class FTPCommand {
 		return "NOOP";
 	}
 	
+	public void quitExecution() { }
+	
 	public boolean isValidContext(FTPState state) {
 		return true;
 	}
 	public final boolean pushResponse(FTPState state, FTPResponse response) {
 		synchronized (executionSync) {
-			if (state.currentFuture == null) return false;
+			FTPFuture future = state.currentFuture;
+			if (future == null) return false;
 			
 			FTPResult result = handleResponse(state, response);
 			if (result != null) {
-				state.currentFuture.setResult(result);
+				future.setResult(result);
 				return true;
 			}
 			return false;

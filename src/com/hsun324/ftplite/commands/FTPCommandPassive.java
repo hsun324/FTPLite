@@ -10,7 +10,7 @@ import com.hsun324.ftplite.FTPState;
 
 public class FTPCommandPassive extends FTPCommand {
 	
-	private static final Pattern PASSIVE_REPONSE_PATTERN = Pattern.compile("[^(]*\\(((?:[0-9]{1,3},?){4}),([0-9]{1,3},[0-9]{1,3})\\)");
+	private static final Pattern PASSIVE_REPONSE_PATTERN = Pattern.compile("[^(]*\\(((?:[0-9]{1,3},?){4}),([0-9]{1,3}),([0-9]{1,3})\\)");
 	private static final Pattern EXTENDED_PASSIVE_REPONSE_PATTERN = Pattern.compile("[^(]*\\((.)\\1{2}([0-9]{1,5})\\1\\)");
 
 	public boolean canBeReused() {
@@ -42,7 +42,7 @@ public class FTPCommandPassive extends FTPCommand {
 				if (response.getCode() == 227) {
 					Matcher matcher = PASSIVE_REPONSE_PATTERN.matcher(response.getContent());
 					if (matcher.find()) {
-						state.dataHost = matcher.group(1).replace('.', ',');
+						state.dataHost = matcher.group(1).replace(',', '.');
 						state.dataPort = Integer.parseInt(matcher.group(2)) * 256 + Integer.parseInt(matcher.group(3));
 						return FTPResult.SUCCEEDED;
 					}

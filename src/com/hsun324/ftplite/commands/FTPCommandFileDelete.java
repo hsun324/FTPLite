@@ -1,25 +1,29 @@
 package com.hsun324.ftplite.commands;
 
 import com.hsun324.ftplite.FTPCommand;
+import com.hsun324.ftplite.FTPFilename;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
-public class FTPCommandNonPrint extends FTPCommand {
-	public boolean canBeReused() {
-		return true;
+public class FTPCommandFileDelete extends FTPCommand {
+	protected final String command;
+	public FTPCommandFileDelete(FTPFilename file) {
+		if (file == null) throw new IllegalArgumentException();
+		this.command = "DELE " + file.getPath();
 	}
+	
 	@Override
 	public String getCommandContent(FTPState state) {
-		return "TYPE N";
+		return command;
 	}
 	@Override
 	public boolean isValidContext(FTPState state) {
 		return state.authCompleted;
 	}
-	
 	@Override
 	public FTPResult handleResponse(FTPState state, FTPResponse response) {
-		return FTPResult.SUCCEEDED;
+		if (response.getCode() == 250) return FTPResult.SUCCEEDED;
+		return FTPResult.FAILED;
 	}
 }

@@ -45,4 +45,8 @@ public final class FTPFuture {
 		}
 	}
 
+	public boolean isResultSet() {
+		return result != null;
+	}
+
 }

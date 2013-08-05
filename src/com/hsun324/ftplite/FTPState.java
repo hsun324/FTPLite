@@ -1,8 +1,6 @@
 package com.hsun324.ftplite;
 
-import com.hsun324.ftplite.commands.FTPCommandNonPrint;
 import com.hsun324.ftplite.commands.FTPCommandPassive;
-
 
 public class FTPState {
 	protected FTPState(FTPClient client, String host, int port) {
@@ -26,8 +24,6 @@ public class FTPState {
 	public boolean authStarted = false;
 	public boolean authCompleted = false;
 	public boolean authPassword = false;
-
-	public FTPCommand printCommand = new FTPCommandNonPrint();
 	
 	public FTPCommand modeCommand = new FTPCommandPassive();
 	public boolean modeActive = false;
@@ -51,14 +47,11 @@ public class FTPState {
 	public int dataPort = 0;
 
 	public String system = "";
-
 	
 	public void reset() {
 		this.authStarted = false;
 		this.authCompleted = false;
 		this.authPassword = false;
-		
-		this.printCommand = new FTPCommandNonPrint();
 		
 		this.modeCommand = new FTPCommandPassive();
 		this.modeActive = false;

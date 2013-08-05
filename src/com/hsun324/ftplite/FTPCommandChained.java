@@ -1,11 +1,7 @@
-package com.hsun324.ftplite.commands;
+package com.hsun324.ftplite;
 
 import java.io.IOException;
 
-import com.hsun324.ftplite.FTPCommand;
-import com.hsun324.ftplite.FTPResponse;
-import com.hsun324.ftplite.FTPResult;
-import com.hsun324.ftplite.FTPState;
 
 public class FTPCommandChained extends FTPCommand {
 	private final FTPCommand[] commands;
@@ -14,6 +10,8 @@ public class FTPCommandChained extends FTPCommand {
 	private boolean lastCommand = false;
 	private boolean commandDone = false;
 	private FTPCommand currentCommand = null;
+	
+	private boolean quitRequested = false;
 	
 	private FTPResult totalResult = new FTPResult(true);
 	
@@ -37,14 +35,21 @@ public class FTPCommandChained extends FTPCommand {
 			currentCommand.execute(state);
 			waitForResponse();
 			commandDone = false;
-			if (lastCommand) break;
+			if (quitRequested|| lastCommand) break;
+		}
+	}
+	
+	public void quitExecution() {
+		quitRequested = true;
+		synchronized (commandSync) {
+			commandSync.notifyAll();
 		}
 	}
 	
 	private void waitForResponse() throws IOException {
 		synchronized (commandSync) {
 			try {
-				while (!commandDone)
+				while (!commandDone && !quitRequested)
 					commandSync.wait();
 			} catch (InterruptedException e) {
 				throw new IOException(e);

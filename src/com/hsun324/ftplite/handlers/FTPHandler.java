@@ -1,16 +1,18 @@
 package com.hsun324.ftplite.handlers;
 
+import com.hsun324.ftplite.FTPFuture;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
 public abstract class FTPHandler {
 	public final boolean pushResponse(FTPState state, FTPResponse response) {
-		if (requiresFuture() && state.currentFuture == null) return false;
+		FTPFuture future = state.currentFuture;
+		if (requiresFuture() && future == null) return false;
 		
 		FTPResult result = handleResponse(state, response);
 		if (result != null) {
-			if (state.currentFuture != null) state.currentFuture.setResult(result);
+			if (future != null) future.setResult(result);
 			return true;
 		}
 		return false;
