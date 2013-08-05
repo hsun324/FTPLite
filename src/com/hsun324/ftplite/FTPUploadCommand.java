@@ -3,13 +3,34 @@ package com.hsun324.ftplite;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public abstract class FTPUploadCommand extends FTPCommand {
-	private Object uploadSync = new Object();
-	private OutputStream upload = null;
-	private byte[] data = null;
 
-	private boolean stopRequested = false;
+/**
+ * This class represents a command that requires a upload to
+ * the data channel for proper execution.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.6a
+ */
+public abstract class FTPUploadCommand extends FTPCommand {
+	/**
+	 * Upload stream semaphore.
+	 */
+	private Object uploadSync = new Object();
 	
+	/**
+	 * The <code>OutputStream</code> for downloading data.
+	 */
+	private OutputStream upload = null;
+	
+	/**
+	 * Flag indicating whether a stop has been requested.
+	 */
+	private boolean stopRequested = false;
+
+	/**
+	 * Gets the upload stream.
+	 * @return the upload stream
+	 */
 	public final OutputStream getUpload() {
 		return upload;
 	}
@@ -52,8 +73,17 @@ public abstract class FTPUploadCommand extends FTPCommand {
 					e.printStackTrace();
 				}
 			}
-		} else if (response.getCode() == 226 && data != null) return FTPResult.SUCCEEDED;
+		} else if (response.getCode() == 226) return FTPResult.SUCCEEDED;
 		return FTPResult.FAILED;
 	}
+	
+	/**
+	 * Gets the data that should be uploaded to the upload stream.
+	 * <p>
+	 * Subclasses of <code>FTPUploadCommand</code> should implement this method.
+	 * @param state the current client state
+	 * @param response the server response
+	 * @return the data to send
+	 */
 	public abstract byte[] getData(FTPState state, FTPResponse response);
 }

@@ -1,5 +1,6 @@
 package com.hsun324.ftplite.handlers;
 
+import com.hsun324.ftplite.FTPHandler;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;

@@ -3,9 +3,24 @@ package com.hsun324.ftplite;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A convenience class that decides the transmission types of different types of files.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.5
+ */
 public class FTPTypeDecider {
+	/**
+	 * Type character for ASCII transmission.
+	 */
 	public static final char ASCII = 'A';
+	/**
+	 * Type character for binary transmission.
+	 */
 	public static final char BINARY = 'I';
+	/**
+	 * A list of all default extensions to be transmitted using ASCII.
+	 */
 	private static final List<String> asciiExtensionsList = Arrays.asList(new String[] {
 		"ajx", "am", "asa", "asc", "asp", "aspx", "awk", "bat", "c", "cdf", "cf", "cfg",
 		"cfm", "cgi", "cnf", "conf", "cpp", "css", "csv", "ctl", "dat", "dhtml", "diz",
@@ -19,12 +34,28 @@ public class FTPTypeDecider {
 		"tmpl", "tpl", "txt", "ubb", "vbs", "xhtml", "xml", "xrc", "xsl"});
 
 	private FTPTypeDecider() { };
+	
+	/**
+	 * Adds an extension to the list of ASCII types.
+	 * @param extension the extension to add
+	 */
 	public static void addExtension(String extension) {
 		if (!asciiExtensionsList.contains(extension)) asciiExtensionsList.add(extension);
 	}
+	/**
+	 * Removes an extension from the list of ASCII types.
+	 * @param extension the extension to remove
+	 */
 	public static void removeExtension(String extension) {
 		asciiExtensionsList.remove(extension);
 	}
+	/**
+	 * Decides what mode files should be transmitted in from the provided
+	 * extension and whether the file has a name.
+	 * @param extension file extension
+	 * @param hasName whether the file has a name
+	 * @return the type character
+	 */
 	public static char decideFTPType(String extension, boolean hasName) {
 		if (!hasName || asciiExtensionsList.contains(extension)) return ASCII;
 		else return BINARY;
