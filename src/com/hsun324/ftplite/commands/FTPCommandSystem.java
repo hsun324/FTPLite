@@ -5,6 +5,13 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles the server
+ * system SYST command.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.5
+ */
 public class FTPCommandSystem extends FTPCommand {
 	@Override
 	public String getCommandContent(FTPState state) {

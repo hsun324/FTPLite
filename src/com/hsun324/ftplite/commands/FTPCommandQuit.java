@@ -5,6 +5,12 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles the QUIT command.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.5
+ */
 public class FTPCommandQuit extends FTPCommand {
 	@Override
 	public String getCommandContent(FTPState state) {

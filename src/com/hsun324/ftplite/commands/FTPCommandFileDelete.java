@@ -6,6 +6,13 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles the file
+ * delete DELE command.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.5
+ */
 public class FTPCommandFileDelete extends FTPCommand {
 	protected final String command;
 	public FTPCommandFileDelete(FTPFilename file) {

@@ -5,6 +5,12 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles the password
+ * PASS command.
+ * @author hsun324
+ * @version 0.6a
+ */
 public class FTPCommandPassword extends FTPCommand {
 	protected final String command;
 	public FTPCommandPassword(String password) {

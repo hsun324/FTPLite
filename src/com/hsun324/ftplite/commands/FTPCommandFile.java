@@ -1,11 +1,19 @@
 package com.hsun324.ftplite.commands;
 
+import com.hsun324.ftplite.FTPCommand;
 import com.hsun324.ftplite.FTPFile;
 import com.hsun324.ftplite.FTPFilename;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPState;
 import com.hsun324.ftplite.FTPUploadCommand;
 
+/**
+ * This {@link FTPCommand} handles file data
+ * commands like STOR and APPE.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.6a
+ */
 public class FTPCommandFile extends FTPUploadCommand {
 	private final String command;
 	private byte[] data = null;

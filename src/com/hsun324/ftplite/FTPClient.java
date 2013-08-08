@@ -192,8 +192,7 @@ public class FTPClient {
 				new FTPCommandPassword(password),
 				new FTPCommandSystem(),
 				new FTPCommandFeatures(),
-				new FTPCommandDirectory(),
-				new FTPCommandUTF8()
+				new FTPCommandDirectory()
 			}));
 			
 			if (!state.connected) {

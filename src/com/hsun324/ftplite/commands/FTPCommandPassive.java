@@ -8,6 +8,12 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles the passive
+ * mode PASV/EPSV command.
+ * @author hsun324
+ * @version 0.6a
+ */
 public class FTPCommandPassive extends FTPCommand {
 	
 	private static final Pattern PASSIVE_REPONSE_PATTERN = Pattern.compile("[^(]*\\(((?:[0-9]{1,3},?){4}),([0-9]{1,3}),([0-9]{1,3})\\)");

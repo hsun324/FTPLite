@@ -10,6 +10,13 @@ import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
 
+/**
+ * This {@link FTPCommand} handles directory functions
+ * like PWD, CWD, CDUP, RMD, and MKD.
+ * @author hsun324
+ * @version 0.6a
+ * @since 0.6a
+ */
 public class FTPCommandDirectory extends FTPCommand {
 	private static final Pattern CWD_RESPONSE_PATTERN = Pattern.compile("^\"([^\"]+)\"[^\"]*$");
 	
