@@ -2,6 +2,8 @@ package com.hsun324.ftplite;
 
 import java.io.IOException;
 
+import com.hsun324.ftplite.client.FTPClient;
+
 /**
  * A class that represents a result that will be provided at an unspecified
  * time in the future. This class also acts as a wrapper for state and 
@@ -19,8 +21,9 @@ public final class FTPFuture {
 	 * @param client
 	 * @param command
 	 */
-	public FTPFuture(FTPClient client, FTPCommand command) {
+	public FTPFuture(FTPClient client, FTPState state, FTPCommand command) {
 		this.client = client;
+		this.state = state;
 		this.command = command;
 	}
 	
@@ -33,6 +36,10 @@ public final class FTPFuture {
 	 * This future's client.
 	 */
 	protected final FTPClient client;
+	/**
+	 * This future's client state.
+	 */
+	protected final FTPState state;
 	/**
 	 * This future's command.
 	 */
@@ -47,8 +54,8 @@ public final class FTPFuture {
 	 * @throws IOException
 	 */
 	public synchronized void execute() throws IOException {
-		if (command.isValidContext(client.state)) {
-			command.execute(client.state);
+		if (command.isValidContext(state)) {
+			command.execute(state);
 		} else result = FTPResult.FAILED;
 		command.setExecuted();
 	}
@@ -99,6 +106,14 @@ public final class FTPFuture {
 	 */
 	public boolean isResultSet() {
 		return result != null;
+	}
+
+	public void quitExecution() {
+		command.quitExecution();
+	}
+
+	public boolean pushResponse(FTPResponse response) {
+		return command.pushResponse(state, response);
 	}
 
 }

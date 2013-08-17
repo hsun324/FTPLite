@@ -25,7 +25,7 @@ public class FTPResponse {
 	 * @param code response code
 	 * @param content response content.
 	 */
-	protected FTPResponse(int code, String content) {
+	public FTPResponse(int code, String content) {
 		this.code = code;
 		this.content = content;
 		this.rep = code + " " + content;

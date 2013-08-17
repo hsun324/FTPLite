@@ -1,5 +1,6 @@
 package com.hsun324.ftplite;
 
+import com.hsun324.ftplite.client.FTPClient;
 import com.hsun324.ftplite.commands.FTPCommandPassive;
 
 /**
@@ -18,7 +19,7 @@ public class FTPState {
 	 * @param host the host
 	 * @param port the port
 	 */
-	protected FTPState(FTPClient client, String host, int port) {
+	public FTPState(FTPClient client, String host, int port) {
 		this.client = client;
 		this.host = host;
 		this.port = port;
@@ -73,12 +74,7 @@ public class FTPState {
 	/**
 	 * The current transmission mode command.
 	 */
-	public FTPCommand modeCommand = new FTPCommandPassive();
-	/**
-	 * Flag indicating whether the client is in
-	 * active or passive mode.
-	 */
-	public boolean modeActive = false;
+	public FTPModeCommand modeCommand = new FTPCommandPassive();
 	
 
 	/**
@@ -148,7 +144,6 @@ public class FTPState {
 		this.authPassword = false;
 		
 		this.modeCommand = new FTPCommandPassive();
-		this.modeActive = false;
 		
 		this.typeImage = false;
 		

@@ -43,7 +43,7 @@ public abstract class FTPDownloadCommand extends FTPCommand {
 		// TODO: Async
 		super.execute(state);
 		synchronized (downloadSync) {
-			download = FTPUtilities.openTransferStream(state.modeActive, state.dataHost, state.dataPort);
+			download = FTPUtilities.openTransferStream(state.modeCommand, state.dataHost, state.dataPort);
 			downloadSync.notify();
 		}
 	}

@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.UnknownHostException;
 
 import com.hsun324.ftplite.FTPCommand;
+import com.hsun324.ftplite.FTPModeCommand;
 import com.hsun324.ftplite.FTPResponse;
 import com.hsun324.ftplite.FTPResult;
 import com.hsun324.ftplite.FTPState;
@@ -16,16 +17,12 @@ import com.hsun324.ftplite.FTPState;
  * @author hsun324
  * @version 0.6a
  */
-public class FTPCommandActive extends FTPCommand {
+public class FTPCommandActive extends FTPModeCommand {
 	private static final int FTP_ACTIVE_PORT_START = 1024;
 	private static final int FTP_ACTIVE_PORT_END = 1024;
 	
 	private byte[] address = null;
 	private int port = 0;
-
-	public boolean canBeReused() {
-		return true;
-	}
 	
 	@Override
 	public String getCommandContent(FTPState state) {
@@ -37,11 +34,6 @@ public class FTPCommandActive extends FTPCommand {
 			e.printStackTrace();
 		}
 		return "NOOP";
-	}
-	
-	@Override
-	public boolean isValidContext(FTPState state) {
-		return state.authCompleted;
 	}
 	
 	private int findPort() {
@@ -65,5 +57,10 @@ public class FTPCommandActive extends FTPCommand {
 		
 		state.dataPort = port;
 		return FTPResult.SUCCEEDED;
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 }

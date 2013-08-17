@@ -54,8 +54,8 @@ public class FTPUtilities {
 	 * @return the stream
 	 * @throws IOException
 	 */
-	public static InputStream openTransferStream(boolean modeActive, String host, int port) throws IOException {
-		if (modeActive) return new ServerSocket(port).accept().getInputStream();
+	public static InputStream openTransferStream(FTPModeCommand modeCommand, String host, int port) throws IOException {
+		if (modeCommand.isActive()) return new ServerSocket(port).accept().getInputStream();
 		else return new Socket(host, port).getInputStream();
 	}
 	
@@ -67,8 +67,8 @@ public class FTPUtilities {
 	 * @return the stream
 	 * @throws IOException
 	 */
-	public static OutputStream openPushStream(boolean modeActive, String host, int port) throws IOException {
-		if (modeActive) return new ServerSocket(port).accept().getOutputStream();
+	public static OutputStream openPushStream(FTPModeCommand modeCommand, String host, int port) throws IOException {
+		if (modeCommand.isActive()) return new ServerSocket(port).accept().getOutputStream();
 		else return new Socket(host, port).getOutputStream();
 	}
 	

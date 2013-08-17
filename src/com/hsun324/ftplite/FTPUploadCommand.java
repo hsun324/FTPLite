@@ -38,7 +38,7 @@ public abstract class FTPUploadCommand extends FTPCommand {
 		// TODO: Async
 		super.execute(state);
 		synchronized (uploadSync) {
-			upload = FTPUtilities.openPushStream(state.modeActive, state.dataHost, state.dataPort);
+			upload = FTPUtilities.openPushStream(state.modeCommand, state.dataHost, state.dataPort);
 			uploadSync.notify();
 		}
 	}
