@@ -11,8 +11,7 @@ import com.hsun324.ftp.ftplite.FTPUploadCommand;
  * This {@link FTPCommand} handles file data
  * commands like STOR and APPE.
  * @author hsun324
- * @version 0.6a
- * @since 0.6a
+ * @version 0.7
  */
 public class FTPCommandFile extends FTPUploadCommand {
 	private final String command;

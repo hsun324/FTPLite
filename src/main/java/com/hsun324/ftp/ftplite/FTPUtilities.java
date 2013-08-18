@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * that are not specific to single functions within the
  * library.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPUtilities {
 	private FTPUtilities() {}

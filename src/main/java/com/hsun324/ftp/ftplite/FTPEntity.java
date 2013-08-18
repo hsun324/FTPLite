@@ -8,8 +8,7 @@ import java.util.regex.Pattern;
 /**
  * A class that represents files and folders in a directory listing.
  * @author hsun324
- * @version 0.5
- * @since 0.5
+ * @version 0.7
  */
 public class FTPEntity {
 	/**
@@ -166,8 +165,7 @@ public class FTPEntity {
 	/**
 	 * An enumeration of the types of entities supported by <code>FTPEntity</code>.
 	 * @author hsun324
-	 * @version 0.5
-	 * @since 0.5
+	 * @version 0.7
 	 */
 	public enum FTPEntityType {
 		/**

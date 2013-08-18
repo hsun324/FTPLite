@@ -10,8 +10,7 @@ import java.util.List;
  * This class is mainly used to abstract away file system and current directory
  * ambiguities.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class FTPFilename {
 	/**

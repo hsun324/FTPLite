@@ -22,7 +22,6 @@ import com.hsun324.ftp.ftplite.commands.*;
  * 
  * @author hsun324
  * @version 0.7
- * @since 0.7
  */
 public class SocketFTPClient extends AbstractFTPClient {
 	// TODO: Exception handling everywhere

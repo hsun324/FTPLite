@@ -9,7 +9,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the session
  * restart REIN command.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandReinitialize extends FTPCommand {
 	@Override

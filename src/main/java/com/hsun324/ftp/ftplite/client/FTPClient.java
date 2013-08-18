@@ -23,7 +23,6 @@ import com.hsun324.ftp.ftplite.FTPTransformation;
  * 
  * @author hsun324
  * @version 0.7
- * @since 0.7
  */
 public interface FTPClient {
 	/**
@@ -106,7 +105,6 @@ public interface FTPClient {
 	 * @param data the data to write to the file
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture writeFile(FTPFilename file, FTPFile data) throws IOException;
 
@@ -119,7 +117,6 @@ public interface FTPClient {
 	 * @param data the data to append to the file
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture appendFile(FTPFilename file, FTPFile data) throws IOException;
 	
@@ -128,7 +125,6 @@ public interface FTPClient {
 	 * @param file the file to delete
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture deleteFile(FTPFilename file) throws IOException;
 	
@@ -142,7 +138,6 @@ public interface FTPClient {
 	 * @param directory the directory to list
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.5
 	 */
 	public FTPFutureData<FTPEntity[]> getFileList(FTPFilename directory) throws IOException;
 
@@ -155,7 +150,6 @@ public interface FTPClient {
 	 * @param directory the directory to list
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFutureData<String> getWorkingDirectory(FTPFilename directory) throws IOException;
 	
@@ -165,7 +159,6 @@ public interface FTPClient {
 	 * @param directory the directory to change to
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.5
 	 */
 	public FTPFuture changeWorkingDirectory(FTPFilename directory) throws IOException;
 	
@@ -174,7 +167,6 @@ public interface FTPClient {
 	 * @param directory the directory to create
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture makeDirectory(FTPFilename directory) throws IOException;
 	
@@ -187,7 +179,6 @@ public interface FTPClient {
 	 * @param directory the directory to delete
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture deleteDirectory(FTPFilename directory) throws IOException;
 
@@ -198,7 +189,6 @@ public interface FTPClient {
 	 * @param directory the directory to delete
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture completelyDeleteDirectory(FTPFilename directory) throws IOException;
 	
@@ -211,7 +201,6 @@ public interface FTPClient {
 	 * @param command the command to queue
 	 * @return a ftp future representing the data command
 	 * @throws IOException
-	 * @since 0.5
 	 */
 	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command) throws IOException;
 	
@@ -226,7 +215,6 @@ public interface FTPClient {
 	 * @param file the target file
 	 * @return a ftp future representing the data command
 	 * @throws IOException
-	 * @since 0.5
 	 */
 	public <T> FTPFutureData<T> queueDataCommand(final FTPTransformation<T> function, FTPCommand command, FTPFilename file) throws IOException;
 
@@ -235,7 +223,6 @@ public interface FTPClient {
 	 * @param command the command to queue
 	 * @return a ftp future representing the file command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture queueFileCommand(FTPCommand command) throws IOException;
 	/**
@@ -244,7 +231,6 @@ public interface FTPClient {
 	 * @param file the target file
 	 * @return a ftp future representing the file command
 	 * @throws IOException
-	 * @since 0.6a
 	 */
 	public FTPFuture queueFileCommand(FTPCommand command, FTPFilename file) throws IOException;
 
@@ -253,7 +239,6 @@ public interface FTPClient {
 	 * specified by file.
 	 * @param file the path
 	 * @return a filename representing the path
-	 * @since 0.6a
 	 */
 	public FTPFilename getAbsoluteFilename(String file);
 	
@@ -263,7 +248,6 @@ public interface FTPClient {
 	 * directory of the <code>FTPClient</code>.
 	 * @param file the path
 	 * @return a filename representing the relative path
-	 * @since 0.6a
 	 */
 	public FTPFilename getRelativeFilename(String file);
 }

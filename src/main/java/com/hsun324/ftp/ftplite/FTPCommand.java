@@ -9,7 +9,7 @@ import java.io.IOException;
  * Subclasses are limited to implementing and overriding non-sensitive
  * functions of this class.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public abstract class FTPCommand {
 	/**
@@ -49,7 +49,6 @@ public abstract class FTPCommand {
 	/**
 	 * Gets whether this command can be executed multiple times.
 	 * @return reusability
-	 * @since 0.5
 	 */
 	public boolean canBeReused() {
 		return false;
@@ -87,7 +86,6 @@ public abstract class FTPCommand {
 	 * <p>
 	 * This method is used for terminating blocking command execution.
 	 * It does nothing in it's default implementation.
-	 * @since 0.6a
 	 */
 	public void quitExecution() { }
 	

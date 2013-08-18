@@ -13,7 +13,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the passive
  * mode PASV/EPSV command.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandPassive extends FTPModeCommand {
 	

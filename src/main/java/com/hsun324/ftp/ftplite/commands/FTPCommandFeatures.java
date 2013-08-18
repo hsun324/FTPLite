@@ -8,8 +8,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the features
  * FEAT command.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class FTPCommandFeatures extends FTPCommand {
 	@Override

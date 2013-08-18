@@ -9,8 +9,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the transfer
  * type TYPE command.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class FTPCommandType extends FTPCommand {
 	public static boolean typeSupported(char type) {

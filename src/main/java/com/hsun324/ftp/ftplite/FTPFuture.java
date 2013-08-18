@@ -12,8 +12,7 @@ import com.hsun324.ftp.ftplite.client.FTPClient;
  * This class is synchronized across threads. Methods in this class that retrieve
  * the result will block until the result is set.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public final class FTPFuture {
 	/**
@@ -102,7 +101,6 @@ public final class FTPFuture {
 	/**
 	 * Gets whether the result is already set.
 	 * @return whether the result is set
-	 * @since 0.6a
 	 */
 	public boolean isResultSet() {
 		return result != null;

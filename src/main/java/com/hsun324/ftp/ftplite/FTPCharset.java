@@ -5,13 +5,11 @@ import java.nio.charset.Charset;
 /**
  * Convenience class that holds certain FTP protocol format objects.
  * @author hsun324
- * @version 0.6a
- * @since 0.6a
+ * @version 0.7
  */
 public class FTPCharset {
 	/**
 	 * Convenience object of the US-ASCII charset used for FTP.
-	 * @since 0.6a
 	 */
 	public static final Charset ASCII;
 	
@@ -22,7 +20,6 @@ public class FTPCharset {
 	
 	/**
 	 * Convenience object of the FTP newline.
-	 * @since 0.6a
 	 */
 	public static final String NEWLINE = "\r\n";
 }

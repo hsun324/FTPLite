@@ -9,7 +9,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the server welcome
  * message.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandConnect extends FTPCommand {
 	@Override

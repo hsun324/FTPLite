@@ -9,7 +9,7 @@ package com.hsun324.ftp.ftplite;
  * {@link FTPHandlerRegistry} using the
  * <code>addHandler(FTPHandler)</code> method.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public abstract class FTPHandler {
 	/**

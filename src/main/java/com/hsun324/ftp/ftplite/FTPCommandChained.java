@@ -11,7 +11,7 @@ import java.io.IOException;
  * method and therefore requires the use of <code>quitExecution</code> to
  * allow the command queue thread to successfully terminate.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandChained extends FTPCommand {
 	/**
@@ -21,7 +21,6 @@ public class FTPCommandChained extends FTPCommand {
 	/**
 	 * Flag indicating whether one failed command will prevent the others from
 	 * executing.
-	 * @since 0.5
 	 */
 	private final boolean shortCircuit;
 	
@@ -66,7 +65,6 @@ public class FTPCommandChained extends FTPCommand {
 	 * will have the short circuit behavior defined by shortCircuit.
 	 * @param shortCircuit whether this chain should short circuit
 	 * @param commands the commands to chain
-	 * @since 0.5
 	 */
 	public FTPCommandChained(boolean shortCircuit, FTPCommand... commands) {
 		this.commands = commands;

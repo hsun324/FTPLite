@@ -9,8 +9,7 @@ import java.nio.charset.Charset;
  * This class abstracts the difference between Binary and ASCII type
  * FTP files and provides access two both forms of a file.
  * @author hsun324
- * @version 0.6a
- * @since 0.6a
+ * @version 0.7
  */
 public class FTPFile {
 	/**

@@ -9,7 +9,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the password
  * PASS command.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandPassword extends FTPCommand {
 	protected final String command;

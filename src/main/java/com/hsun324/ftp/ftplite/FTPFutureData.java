@@ -13,8 +13,7 @@ import java.io.IOException;
  * @author hsun324
  *
  * @param <T>
- * @version 0.5
- * @since 0.5
+ * @version 0.7
  */
 public abstract class FTPFutureData<T> {
 	/**

@@ -10,15 +10,13 @@ import com.hsun324.ftp.ftplite.FTPFile;
  * byte[] data format into more useful data structures through the
  * use of a <code>transform(FTPState, byte[])</code> function.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  * @param <T> the resulting data structure type
  */
 public abstract class FTPTransformation<T> {
 	/**
 	 * A generic transformation for file data that converts byte arrays
 	 * into {@link FTPFile}s.
-	 * @since 0.6a
 	 */
 	public static final FTPTransformation<FTPFile> FILE_TRANSFORMATION = new FTPTransformation<FTPFile>() {
 		@Override
@@ -31,7 +29,6 @@ public abstract class FTPTransformation<T> {
 	/**
 	 * A generic transformation for control ASCII responses that converts byte arrays
 	 * into <code>String</code>s.
-	 * @since 0.6a
 	 */
 	public static final FTPTransformation<String> ASCII_TRANSFORMATION = new FTPTransformation<String>() {
 		@Override

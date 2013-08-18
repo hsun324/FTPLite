@@ -10,8 +10,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the list
  * LIST/MLSD command.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class FTPCommandList extends FTPDownloadCommand {
 	private final String directory;

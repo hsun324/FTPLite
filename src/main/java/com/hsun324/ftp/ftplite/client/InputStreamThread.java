@@ -21,8 +21,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * command.
  * 
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class InputStreamThread extends Thread {
 	/**

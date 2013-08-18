@@ -9,7 +9,7 @@ import com.hsun324.ftp.ftplite.commands.FTPCommandPassive;
  * This state is never removed from the client. The <code>reset()</code>
  * method allows for this state to return to a default mode.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPState {
 	/**

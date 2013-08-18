@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * A convenience class that decides the transmission types of different types of files.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 public class FTPTypeDecider {
 	/**

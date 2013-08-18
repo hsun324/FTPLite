@@ -9,7 +9,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPHandler} handles the general server-initiated
  * disconnect code, 421.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPHandlerDisconnect extends FTPHandler {
 	private static final int[] HANDLED_CODES = new int[]{421};

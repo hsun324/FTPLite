@@ -9,8 +9,7 @@ import com.hsun324.ftp.ftplite.FTPFuture;
  * A <code>Thread</code> that handles the execution of queued
  * commands.
  * @author hsun324
- * @version 0.6a
- * @since 0.5
+ * @version 0.7
  */
 class FTPQueueThread extends Thread {
 	/**

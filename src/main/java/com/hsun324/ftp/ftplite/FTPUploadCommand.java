@@ -8,8 +8,7 @@ import java.io.OutputStream;
  * This class represents a command that requires a upload to
  * the data channel for proper execution.
  * @author hsun324
- * @version 0.6a
- * @since 0.6a
+ * @version 0.7
  */
 public abstract class FTPUploadCommand extends FTPCommand {
 	/**

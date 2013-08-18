@@ -15,7 +15,7 @@ import com.hsun324.ftp.ftplite.FTPState;
  * This {@link FTPCommand} handles the data
  * connection PORT command.
  * @author hsun324
- * @version 0.6a
+ * @version 0.7
  */
 public class FTPCommandActive extends FTPModeCommand {
 	private static final int FTP_ACTIVE_PORT_START = 1024;

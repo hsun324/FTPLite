@@ -4,7 +4,7 @@ package com.hsun324.ftp.ftplite;
  * This class represents a response from the server including
  * a FTP response code and optionally multi-line content.
  * @author hsun324
- * @version 0.5
+ * @version 0.7
  */
 public class FTPResponse {
 	/**

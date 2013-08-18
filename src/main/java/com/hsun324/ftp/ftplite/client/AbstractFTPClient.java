@@ -33,7 +33,6 @@ import com.hsun324.ftp.ftplite.commands.FTPCommandFile.FileAction;
  * 
  * @author hsun324
  * @version 0.7
- * @since 0.7
  */
 public abstract class AbstractFTPClient implements FTPClient {
 	
@@ -73,7 +72,6 @@ public abstract class AbstractFTPClient implements FTPClient {
 	 * @param command the command to queue
 	 * @return a ftp future representing the command
 	 * @throws IOException
-	 * @since 0.5
 	 */
 	protected FTPFuture queueClosableCommand(FTPCommand command) throws IOException {
 		synchronized (queueSync) {
@@ -202,7 +200,6 @@ public abstract class AbstractFTPClient implements FTPClient {
 	 * @param file the file to test
 	 * @return the type char
 	 * @see FTPTypeDecider
-	 * @since 0.6a
 	 */
 	private char getFTPType(FTPFilename file) {
 		if (file == null) return FTPTypeDecider.ASCII;
