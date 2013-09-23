@@ -12,10 +12,34 @@ import java.nio.charset.Charset;
  * @version 0.7
  */
 public class FTPFile {
+	public static enum FTPFiletype {
+		ASCII("US-ASCII"),
+		TEXT("US-ASCII"),
+		BINARY;
+		
+		private final Charset charset;
+		private final boolean isBinary;
+		private FTPFiletype() {
+			this.isBinary = true;
+			this.charset = null;
+		}
+		private FTPFiletype(String charsetName) {
+			this.isBinary = false;
+			this.charset = Charset.isSupported(charsetName) ? Charset.forName(charsetName) : Charset.defaultCharset();
+		}
+		
+		public boolean isBinary() {
+			return isBinary;
+		}
+		public Charset getCharset() {
+			return charset;
+		}
+	}
+	
 	/**
-	 * Flag indicating whether this file was originally binary.
+	 * The file's type.
 	 */
-	private final boolean isBinary;
+	private final FTPFiletype filetype;
 	/**
 	 * The byte array source of this file.
 	 */
@@ -35,11 +59,11 @@ public class FTPFile {
 	 * @param data file data
 	 */
 	public FTPFile (byte[] data) {
-		this.isBinary = true;
+		this.filetype = FTPFiletype.BINARY;
 		this.source = data;
 		
-		this.text = new String(data, FTPCharset.ASCII);
-		this.encoding = FTPCharset.ASCII;
+		this.encoding = FTPFiletype.ASCII.getCharset();
+		this.text = new String(data, this.encoding);
 	}
 	/**
 	 * Creates a text <code>FTPFile</code> from
@@ -49,7 +73,7 @@ public class FTPFile {
 	 * @param encoding the file encoding
 	 */
 	public FTPFile (String text, Charset encoding) {
-		this.isBinary = false;
+		this.filetype = FTPFiletype.TEXT;
 		this.text = text;
 		this.encoding = encoding;
 		
@@ -63,7 +87,7 @@ public class FTPFile {
 	 * @param encoding the file encoding
 	 */
 	public FTPFile(byte[] data, Charset encoding) {
-		this.isBinary = false;
+		this.filetype = FTPFiletype.TEXT;
 		this.text = new String(data, encoding).replaceAll("(\n|\r)\r\n", "\r\n");
 		this.encoding = encoding;
 		
@@ -71,19 +95,28 @@ public class FTPFile {
 	}
 	
 	/**
+	 * Gets this file's file type.
+	 * @return the file type
+	 */
+	public FTPFiletype getFiletype() {
+		return filetype;
+	}
+	
+	/**
 	 * Gets whether this file was originally binary.
 	 * @return binary
 	 */
 	public boolean isBinary() {
-		return isBinary;
+		return filetype.isBinary();
 	}
 	/**
 	 * Gets whether this file was originally text.
 	 * @return text
 	 */
 	public boolean isText() {
-		return !isBinary;
+		return !filetype.isBinary();
 	}
+	
 	/**
 	 * Gets the source bytes.
 	 * @return source bytes

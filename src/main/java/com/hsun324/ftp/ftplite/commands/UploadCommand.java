@@ -1,7 +1,12 @@
-package com.hsun324.ftp.ftplite;
+package com.hsun324.ftp.ftplite.commands;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import com.hsun324.ftp.ftplite.FTPResponse;
+import com.hsun324.ftp.ftplite.FTPResult;
+import com.hsun324.ftp.ftplite.FTPUtilities;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
 
 
 /**
@@ -10,7 +15,7 @@ import java.io.OutputStream;
  * @author hsun324
  * @version 0.7
  */
-public abstract class FTPUploadCommand extends FTPCommand {
+public abstract class UploadCommand extends TextCommand {
 	/**
 	 * Upload stream semaphore.
 	 */
@@ -33,11 +38,10 @@ public abstract class FTPUploadCommand extends FTPCommand {
 	public final OutputStream getUpload() {
 		return upload;
 	}
-	public void execute(FTPState state) throws IOException {
+	public void execute(FTPInterface inter) throws IOException {
 		// TODO: Async
-		super.execute(state);
 		synchronized (uploadSync) {
-			upload = FTPUtilities.openPushStream(state.modeCommand, state.dataHost, state.dataPort);
+			upload = FTPUtilities.openPushStream(inter.getModeCommand(), inter.getDataHost(), inter.getDataPort());
 			uploadSync.notify();
 		}
 	}
@@ -51,12 +55,12 @@ public abstract class FTPUploadCommand extends FTPCommand {
 	}
 	
 	@Override
-	public final FTPResult handleResponse(FTPState state, FTPResponse response) {
+	public final FTPResult handleResponse(FTPInterface inter, FTPResponse response) {
 		if (response.getCode() == 150 || response.getCode() == 125) {
 			try {
 				synchronized (uploadSync) {
 					while (upload == null && !stopRequested) uploadSync.wait();
-					upload.write(getData(state, response));
+					upload.write(getData(inter, response));
 					upload.flush();
 				}
 				return null;
@@ -84,5 +88,5 @@ public abstract class FTPUploadCommand extends FTPCommand {
 	 * @param response the server response
 	 * @return the data to send
 	 */
-	public abstract byte[] getData(FTPState state, FTPResponse response);
+	public abstract byte[] getData(FTPInterface inter, FTPResponse response);
 }

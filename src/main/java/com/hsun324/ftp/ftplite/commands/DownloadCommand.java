@@ -1,7 +1,12 @@
-package com.hsun324.ftp.ftplite;
+package com.hsun324.ftp.ftplite.commands;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.hsun324.ftp.ftplite.FTPResponse;
+import com.hsun324.ftp.ftplite.FTPResult;
+import com.hsun324.ftp.ftplite.FTPUtilities;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
 
 /**
  * This class represents a command that requires a download from
@@ -9,7 +14,7 @@ import java.io.InputStream;
  * @author hsun324
  * @version 0.7
  */
-public abstract class FTPDownloadCommand extends FTPCommand {
+public abstract class DownloadCommand extends TextCommand {
 	/**
 	 * Download stream semaphore.
 	 */
@@ -38,11 +43,11 @@ public abstract class FTPDownloadCommand extends FTPCommand {
 		return download;
 	}
 	
-	public void execute(FTPState state) throws IOException {
+	public void execute(FTPInterface inter) throws IOException {
 		// TODO: Async
-		super.execute(state);
+		super.execute(inter);
 		synchronized (downloadSync) {
-			download = FTPUtilities.openTransferStream(state.modeCommand, state.dataHost, state.dataPort);
+			download = FTPUtilities.openTransferStream(inter.getModeCommand(), inter.getDataHost(), inter.getDataPort());
 			downloadSync.notify();
 		}
 	}
@@ -56,12 +61,12 @@ public abstract class FTPDownloadCommand extends FTPCommand {
 	}
 	
 	@Override
-	public final FTPResult handleResponse(FTPState state, FTPResponse response) {
+	public final FTPResult handleResponse(FTPInterface inter, FTPResponse response) {
 		if (response.getCode() == 150 || response.getCode() == 125) {
 			try {
 				synchronized (downloadSync) {
 					while (download == null && !stopRequested) downloadSync.wait();
-					if (download != null) data = processData(state, response, FTPUtilities.readAll(download));
+					if (download != null) data = processData(inter, response, FTPUtilities.readAll(download));
 				}
 				return null;
 			} catch (IOException e) {
@@ -89,5 +94,5 @@ public abstract class FTPDownloadCommand extends FTPCommand {
 	 * @param data the downloaded data
 	 * @return the data for the result
 	 */
-	public abstract byte[] processData(FTPState state, FTPResponse response, byte[] data);
+	public abstract byte[] processData(FTPInterface inter, FTPResponse response, byte[] data);
 }

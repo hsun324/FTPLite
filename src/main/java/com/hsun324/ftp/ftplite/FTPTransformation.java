@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hsun324.ftp.ftplite.FTPFile;
+import com.hsun324.ftp.ftplite.FTPFile.FTPFiletype;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
 
 /**
  * This abstract class encapsulates transformations from a generic
@@ -20,9 +22,9 @@ public abstract class FTPTransformation<T> {
 	 */
 	public static final FTPTransformation<FTPFile> FILE_TRANSFORMATION = new FTPTransformation<FTPFile>() {
 		@Override
-		public FTPFile transform(FTPState state, byte[] data) throws Exception {
-			if (state.typeImage) return new FTPFile(data);
-			return new FTPFile(data, FTPCharset.ASCII);
+		public FTPFile transform(FTPInterface clientInterface, byte[] data) throws Exception {
+			if (clientInterface.getCurrentFiletype() == FTPFiletype.BINARY) return new FTPFile(data);
+			return new FTPFile(data, FTPFiletype.ASCII.getCharset());
 		}
 	};
 
@@ -32,28 +34,28 @@ public abstract class FTPTransformation<T> {
 	 */
 	public static final FTPTransformation<String> ASCII_TRANSFORMATION = new FTPTransformation<String>() {
 		@Override
-		public String transform(FTPState state, byte[] data) throws Exception {
-			return new String(data, FTPCharset.ASCII);
+		public String transform(FTPInterface clientInterface, byte[] data) throws Exception {
+			return new String(data, FTPFiletype.ASCII.getCharset());
 		}
 	};
 
 	/**
 	 * A {@link FTPEntity} prototype array.
 	 */
-	private static final FTPEntity[] FTPENTITY_PROTOTYPE_ARRAY = new FTPEntity[0];
+	private static final FTPObject[] FTPENTITY_PROTOTYPE_ARRAY = new FTPObject[0];
 	/**
 	 * A generic transformation for file list responses that converts byte arrays
 	 * into {@link FTPEntity}<code>[]</code>s.
 	 */
-	public static final FTPTransformation<FTPEntity[]> FILELIST_TRANSFORMATION = new FTPTransformation<FTPEntity[]> () {
+	public static final FTPTransformation<FTPObject[]> FILELIST_TRANSFORMATION = new FTPTransformation<FTPObject[]> () {
 		@Override
-		public FTPEntity[] transform(FTPState state, byte[] data) throws Exception {
+		public FTPObject[] transform(FTPInterface clientInterface, byte[] data) throws Exception {
 			// TODO: proper newline splitting
 			String[] lines = new String(data).split("\r\n?|\n\r?");
-			List<FTPEntity> list = new ArrayList<FTPEntity>();
+			List<FTPObject> list = new ArrayList<FTPObject>();
 			int length = lines.length;
 			for (int i = 0; i < length; i++) {
-				FTPEntity entity = FTPEntity.parseEntity(state.workingDirectory, lines[i]);
+				FTPObject entity = FTPObject.parseEntity(clientInterface.getCurrentDirectory(), lines[i]);
 				if (entity != null) list.add(entity);
 			}
 			return list.toArray(FTPENTITY_PROTOTYPE_ARRAY);
@@ -65,10 +67,10 @@ public abstract class FTPTransformation<T> {
 	 * the byte array into a more useful data structure.
 	 * <p>
 	 * Subclasses of <code>FTPTransformation</code> should implement this method.
-	 * @param state the current client state
+	 * @param clientInterface the client interface
 	 * @param data the data array
 	 * @return the data structure
 	 * @throws Exception
 	 */
-	public abstract T transform(FTPState state, byte[] data) throws Exception;
+	public abstract T transform(FTPInterface clientInterface, byte[] data) throws Exception;
 }

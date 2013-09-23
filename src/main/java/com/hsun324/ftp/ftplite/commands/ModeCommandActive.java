@@ -5,19 +5,17 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 
-import com.hsun324.ftp.ftplite.FTPCommand;
-import com.hsun324.ftp.ftplite.FTPModeCommand;
 import com.hsun324.ftp.ftplite.FTPResponse;
 import com.hsun324.ftp.ftplite.FTPResult;
-import com.hsun324.ftp.ftplite.FTPState;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
 
 /**
- * This {@link FTPCommand} handles the data
+ * This {@link Command} handles the data
  * connection PORT command.
  * @author hsun324
  * @version 0.7
  */
-public class FTPCommandActive extends FTPModeCommand {
+public class ModeCommandActive extends ModeCommand {
 	private static final int FTP_ACTIVE_PORT_START = 1024;
 	private static final int FTP_ACTIVE_PORT_END = 1024;
 	
@@ -25,7 +23,7 @@ public class FTPCommandActive extends FTPModeCommand {
 	private int port = 0;
 	
 	@Override
-	public String getCommandContent(FTPState state) {
+	public String getCommandContent(FTPInterface inter) {
 		try {
 			address = InetAddress.getLocalHost().getAddress();
 			port = findPort();
@@ -52,10 +50,10 @@ public class FTPCommandActive extends FTPModeCommand {
 	}
 	
 	@Override
-	public FTPResult handleResponse(FTPState state, FTPResponse response) {
+	public FTPResult handleResponse(FTPInterface inter, FTPResponse response) {
 		if (response.getCode() != 200)  return FTPResult.FAILED;
 		
-		state.dataPort = port;
+		inter.setDataPort(port);
 		return FTPResult.SUCCEEDED;
 	}
 

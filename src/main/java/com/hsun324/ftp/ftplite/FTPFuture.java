@@ -3,6 +3,8 @@ package com.hsun324.ftp.ftplite;
 import java.io.IOException;
 
 import com.hsun324.ftp.ftplite.client.FTPClient;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
+import com.hsun324.ftp.ftplite.commands.Command;
 
 /**
  * A class that represents a result that will be provided at an unspecified
@@ -20,9 +22,9 @@ public final class FTPFuture {
 	 * @param client
 	 * @param command
 	 */
-	public FTPFuture(FTPClient client, FTPState state, FTPCommand command) {
+	public FTPFuture(FTPClient client, FTPInterface inter, Command command) {
 		this.client = client;
-		this.state = state;
+		this.inter = inter;
 		this.command = command;
 	}
 	
@@ -38,11 +40,11 @@ public final class FTPFuture {
 	/**
 	 * This future's client state.
 	 */
-	protected final FTPState state;
+	protected final FTPInterface inter;
 	/**
 	 * This future's command.
 	 */
-	protected final FTPCommand command;
+	protected final Command command;
 	/**
 	 * This future's command's result.
 	 */
@@ -53,10 +55,9 @@ public final class FTPFuture {
 	 * @throws IOException
 	 */
 	public synchronized void execute() throws IOException {
-		if (command.isValidContext(state)) {
-			command.execute(state);
+		if (command.isValidContext(inter)) {
+			command.execute(inter);
 		} else result = FTPResult.FAILED;
-		command.setExecuted();
 	}
 	
 	/**
@@ -68,6 +69,13 @@ public final class FTPFuture {
 		waitUntilResult();
 		return result;
 	}
+	
+	public boolean completed() {
+		synchronized (resultSync) {
+			return result != null;
+		}
+	}
+	
 	/**
 	 * Waits for the result to be set.
 	 * @throws IOException
@@ -111,7 +119,7 @@ public final class FTPFuture {
 	}
 
 	public boolean pushResponse(FTPResponse response) {
-		return command.pushResponse(state, response);
+		return command.processResponse(inter, response);
 	}
 
 }

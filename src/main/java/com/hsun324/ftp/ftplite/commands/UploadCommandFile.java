@@ -1,26 +1,25 @@
 package com.hsun324.ftp.ftplite.commands;
 
-import com.hsun324.ftp.ftplite.FTPCommand;
 import com.hsun324.ftp.ftplite.FTPFile;
-import com.hsun324.ftp.ftplite.FTPFilename;
+import com.hsun324.ftp.ftplite.FTPObject;
 import com.hsun324.ftp.ftplite.FTPResponse;
-import com.hsun324.ftp.ftplite.FTPState;
-import com.hsun324.ftp.ftplite.FTPUploadCommand;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
+import com.hsun324.ftp.ftplite.client.FTPInterface.ClientState;
 
 /**
- * This {@link FTPCommand} handles file data
+ * This {@link Command} handles file data
  * commands like STOR and APPE.
  * @author hsun324
  * @version 0.7
  */
-public class FTPCommandFile extends FTPUploadCommand {
+public class UploadCommandFile extends UploadCommand {
 	private final String command;
 	private byte[] data = null;
 
-	public FTPCommandFile(FileAction action, FTPFilename file) {
+	public UploadCommandFile(FileAction action, FTPObject file) {
 		this(action, file, null);
 	}
-	public FTPCommandFile(FileAction action, FTPFilename file, FTPFile data) {
+	public UploadCommandFile(FileAction action, FTPObject file, FTPFile data) {
 		// TODO: Current Directory / Directory Test
 		if (file == null || data == null) throw new IllegalArgumentException();
 		switch (action) {
@@ -32,15 +31,15 @@ public class FTPCommandFile extends FTPUploadCommand {
 	}
 	
 	@Override
-	public String getCommandContent(FTPState state) {
+	public String getCommandContent(FTPInterface inter) {
 		return command;
 	}
 	@Override
-	public boolean isValidContext(FTPState state) {
-		return state.authCompleted && state.modeCommand != null;
+	public boolean isValidContext(FTPInterface inter) {
+		return inter.getClientState() == ClientState.READY;
 	}
 	
-	public byte[] getData(FTPState state, FTPResponse response) {
+	public byte[] getData(FTPInterface inter, FTPResponse response) {
 		return data;
 	}
 	

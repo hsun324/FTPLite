@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hsun324.ftp.ftplite.commands.ModeCommand;
+
 /**
  * A convenience class that contains miscellaneous methods
  * that are not specific to single functions within the
@@ -54,7 +56,7 @@ public class FTPUtilities {
 	 * @return the stream
 	 * @throws IOException
 	 */
-	public static InputStream openTransferStream(FTPModeCommand modeCommand, String host, int port) throws IOException {
+	public static InputStream openTransferStream(ModeCommand modeCommand, String host, int port) throws IOException {
 		if (modeCommand.isActive()) return new ServerSocket(port).accept().getInputStream();
 		else return new Socket(host, port).getInputStream();
 	}
@@ -67,7 +69,7 @@ public class FTPUtilities {
 	 * @return the stream
 	 * @throws IOException
 	 */
-	public static OutputStream openPushStream(FTPModeCommand modeCommand, String host, int port) throws IOException {
+	public static OutputStream openPushStream(ModeCommand modeCommand, String host, int port) throws IOException {
 		if (modeCommand.isActive()) return new ServerSocket(port).accept().getOutputStream();
 		else return new Socket(host, port).getOutputStream();
 	}

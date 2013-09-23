@@ -1,17 +1,18 @@
 package com.hsun324.ftp.ftplite.commands;
 
-import com.hsun324.ftp.ftplite.FTPCommand;
 import com.hsun324.ftp.ftplite.FTPResponse;
 import com.hsun324.ftp.ftplite.FTPResult;
-import com.hsun324.ftp.ftplite.FTPState;
+import com.hsun324.ftp.ftplite.FTPFile.FTPFiletype;
+import com.hsun324.ftp.ftplite.client.FTPInterface;
+import com.hsun324.ftp.ftplite.client.FTPInterface.ClientState;
 
 /**
- * This {@link FTPCommand} handles the transfer
+ * This {@link Command} handles the transfer
  * type TYPE command.
  * @author hsun324
  * @version 0.7
  */
-public class FTPCommandType extends FTPCommand {
+public class TextCommandType extends TextCommand {
 	public static boolean typeSupported(char type) {
 		return type == 'A' || type == 'I';
 	}
@@ -19,25 +20,25 @@ public class FTPCommandType extends FTPCommand {
 	private final char type;
 	private final String command;
 	
-	public FTPCommandType(char typeChar) {
+	public TextCommandType(char typeChar) {
 		if (!typeSupported(typeChar)) throw new IllegalArgumentException();
 		this.type = typeChar;
 		this.command = "TYPE " + typeChar;
 	}
 
 	@Override
-	public String getCommandContent(FTPState state) {
+	public String getCommandContent(FTPInterface inter) {
 		return command;
 	}
 	@Override
-	public boolean isValidContext(FTPState state) {
-		return state.authCompleted;
+	public boolean isValidContext(FTPInterface inter) {
+		return inter.getClientState() == ClientState.READY;
 	}
 	
 	@Override
-	public FTPResult handleResponse(FTPState state, FTPResponse response) {
+	public FTPResult handleResponse(FTPInterface inter, FTPResponse response) {
 		if (response.getCode() != 200) return FTPResult.FAILED;
-		state.typeImage = type == 'I';
+		inter.setCurrentFiletype(type == 'I' ? FTPFiletype.BINARY : FTPFiletype.ASCII);
 		return FTPResult.SUCCEEDED;
 	}
 }
